@@ -1,0 +1,20 @@
+html {
+  font-family: "Roboto Condensed", sans-serif;
+}
+
+.Contact {
+  margin-top: 10px;
+}
+
+.ContactDiv {
+  padding: 20px 20px 30px;
+  background-color: #fff;
+}
+
+.PageContact {
+  padding: 20px 80px 0;
+}
+
+.Map {
+  padding: 0 20px 40px;
+}

@@ -1,0 +1,58 @@
+html {
+  font-family: "Roboto Condensed", sans-serif;
+}
+
+.FormRegister {
+  text-align: center;
+  width: 430px;
+  /* padding: 30px 70px; */
+  position: relative;
+}
+
+.ContentRegister {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.RegisterContent {
+  text-algin: center;
+  padding: 60px 0;
+}
+
+.TitleRegister {
+  color: #000;
+  font-weight: 500;
+  font-size: 26px;
+  padding-bottom: 15px;
+}
+
+.NameAccountRegister {
+  padding: 14px 10px;
+}
+
+.NameAccountRegister input {
+  width: 100%;
+  padding: 14px 10px;
+  border: 1px solid #dadade;
+}
+
+.PassWordRegister {
+  padding: 14px 10px;
+}
+
+.PassWordRegister input {
+  width: 100%;
+  padding: 14px 10px;
+  border: 1px solid #dadade;
+}
+
+.ButtonRegister {
+  padding: 18px 10px;
+  transition: all 0.3s ease;
+}
+
+.ButtonRegister button:hover {
+  background-color: #ff4d4d;
+  transform: scale(1.05);
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+}

@@ -1,0 +1,351 @@
+html {
+  font-family: "Roboto Condensed", sans-serif;
+}
+
+.PayContent {
+  display: flex;
+}
+
+.PayContentLeft {
+  width: 55%;
+  padding: 50px 20px 50px 80px;
+  border-right: 1px solid #dddddd;
+}
+
+.PayContentLeftTitle1 {
+  font-size: 23px;
+  font-weight: 500;
+  /* padding-bottom: 15px; */
+}
+
+.PayContentLeftTitle2 {
+  font-size: 23px;
+  font-weight: 500;
+  padding-top: 10px;
+  padding-bottom: 15px;
+}
+
+.PayContentLeftInput {
+  padding: 25px 25px 0 0;
+}
+
+.InputNamePay,
+.InputEmailPhonePay,
+.InputAddressPay,
+.InputCityPay {
+  padding-bottom: 20px;
+}
+
+.InputNamePay input,
+.InputEmailPhonePay input,
+.InputAddressPay input,
+.InputCityPay input {
+  padding: 4px 16px;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 40px;
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background-color: #f9f9f9;
+}
+
+.InputCityPay1,
+.InputCityPay2,
+.InputCityPay3 {
+  width: 35%;
+}
+
+.InputEmailPhonePay {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.InputEmailPhonePay1 {
+  width: 65%;
+}
+
+.InputEmailPhonePay2 {
+  width: 35%;
+}
+
+.InputNamePay input::placeholder,
+.InputEmailPhonePay input::placeholder,
+.InputAddressPay input::placeholder,
+.InputCityPay input::placeholder {
+  color: #999999;
+}
+
+.InputNamePay input:focus,
+textarea:focus {
+  border-color: #333333;
+  outline: none;
+}
+
+.InputEmailPhonePay input:focus,
+textarea:focus {
+  border-color: #333333;
+  outline: none;
+}
+
+.InputAddressPay input:focus,
+textarea:focus {
+  border-color: #333333;
+  outline: none;
+}
+
+.InputCityPay input:focus,
+textarea:focus {
+  border-color: #333333;
+  outline: none;
+}
+
+.InputCityPay {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ShippingOptions,
+.PayOptions {
+  padding: 10px 30px 0 0;
+}
+
+.ShippingOption {
+  display: flex;
+  color: #333;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 16px;
+  font-size: 17px;
+  font-weight: 400;
+  height: 60px;
+  line-height: 40px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background-color: #f9f9f9;
+  margin-bottom: 20px;
+}
+
+.flex1-label {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.flex-label {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  line-height: normal;
+}
+
+.PayOption {
+  display: flex;
+  color: #333;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 16px;
+  font-size: 17px;
+  height: 70px;
+  font-weight: 400;
+  line-height: 40px;
+  border: 1px solid #ddd;
+  background-color: #f9f9f9;
+}
+
+.pay-text {
+  width: 90%;
+}
+
+.ImgPayment {
+  width: 10%;
+  padding: 2px;
+}
+
+.ImgPayment img {
+  width: 100%;
+}
+
+.PayContentRight {
+  width: 45%;
+  background-color: #f8f8ff;
+  padding: 50px 80px 50px 45px;
+}
+
+.PayContentRightTitle {
+  font-size: 23px;
+  font-weight: 500;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #dddddd;
+}
+
+.PayContentRightDiscount {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 0;
+  border-bottom: 1px solid #dddddd;
+}
+
+.InputDiscount {
+  width: 80%;
+}
+
+.InputDiscount input {
+  padding: 4px 16px;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 40px;
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background-color: #f9f9f9;
+}
+
+.InputDiscount input:focus,
+textarea:focus {
+  border-color: #333333;
+  outline: none;
+}
+
+.ButtonDiscount {
+  width: 20%;
+}
+
+.ButtonDiscount button {
+  padding: 17px 19px;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  background-color: #333f48;
+  border-radius: 5px;
+  transition: transform 0.3s ease;
+}
+
+.ButtonDiscount button:hover {
+  transform: scale(1.1);
+}
+
+.EstimatePrice {
+  padding: 20px 15px 5px;
+  border-bottom: 1px solid #dddddd;
+}
+
+.EstimatePriceContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 15px;
+  font-size: 17px;
+  color: #888888;
+}
+
+.TotalAmount {
+  padding: 20px 15px;
+}
+
+.TotalAmountContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.TotalAmountContent1 {
+  font-size: 18px;
+  color: #333;
+}
+
+.TotalAmountContent2 {
+  font-size: 25px;
+  font-weight: 500;
+}
+
+.Order {
+  padding: 10px 15px;
+}
+
+.OrderContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.BackToCart {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.BackToCart a {
+  text-decoration: none;
+  color: #000;
+}
+
+.BackToCart:hover {
+  transform: scale(1.1);
+}
+
+.OrderButton button {
+  padding: 17px 25px;
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  background-color: #000;
+  border-radius: 5px;
+  transition: transform 0.3s ease;
+  font-family: "Roboto Condensed", sans-serif;
+}
+
+.OrderButton button:hover {
+  transform: scale(1.1);
+}
+
+.PayProduct {
+  padding: 20px 15px 5px;
+  border-bottom: 1px solid #dddddd;
+}
+
+.ProductPay {
+  display: flex;
+  height: 85px;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.ProductPayImg {
+  width: 25%;
+  height: 100%;
+}
+
+.ProductPayImg img {
+  width: 90%;
+  height: 100%;
+  border-radius: 15px;
+}
+
+.ProductPayName {
+  width: 60%;
+}
+
+.ProductPayName h5 {
+  font-size: 16px;
+}
+
+.ProductPayName p {
+  font-size: 14px;
+  color: #969696;
+}
+
+.ProductPayPrice {
+  width: 15%;
+  font-size: 18px;
+  font-weight: 500;
+}

@@ -1,0 +1,76 @@
+html {
+  font-family: "Roboto Condensed", sans-serif;
+}
+
+.FormLogin {
+  text-align: center;
+  width: 430px;
+  /* padding: 30px 70px; */
+  position: relative;
+}
+
+.ContentLogin {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.LoginContent {
+  text-algin: center;
+  padding: 60px 0;
+}
+
+.TitleLogin {
+  color: #000;
+  font-weight: 500;
+  font-size: 26px;
+  padding-bottom: 15px;
+}
+
+.NameAccount {
+  padding: 14px 10px;
+}
+
+.NameAccount input {
+  width: 100%;
+  padding: 14px 10px;
+  border: 1px solid #dadade;
+}
+
+.PassWord {
+  padding: 14px 10px;
+}
+
+.PassWord input {
+  width: 100%;
+  padding: 14px 10px;
+  border: 1px solid #dadade;
+}
+
+.ButtonLogin {
+  padding: 18px 10px;
+  transition: all 0.3s ease;
+}
+
+.ButtonLogin button:hover {
+  background-color: #ff4d4d;
+  transform: scale(1.05);
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.LinkRegister a {
+  color: #000;
+}
+
+.Validator {
+  text-align: left;
+  padding-top: 7px;
+  color: #d21312;
+}
+
+.form-control-dn {
+  border: 1px solid #dadade;
+}
+
+.form-control-dn.error {
+  border-color: red;
+}

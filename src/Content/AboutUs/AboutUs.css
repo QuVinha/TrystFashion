@@ -1,0 +1,71 @@
+html {
+  font-family: "Roboto Condensed", sans-serif;
+}
+
+.AboutUs {
+  margin-top: 15px;
+}
+
+.AboutUsTitle {
+  text-align: center;
+  padding: 30px;
+}
+
+.AboutUsTitle1 {
+  font-size: 25px;
+  font-weight: 700;
+  letter-spacing: 4.7px;
+}
+
+.AboutUsTitle2 {
+  margin: 0 230px;
+  padding-bottom: 20px;
+  font-size: 47px;
+  font-weight: 500;
+  letter-spacing: 4.7px;
+  border-bottom: 1px solid #dddddd;
+}
+
+.AboutUsContent1 {
+  font-size: 18px;
+  line-height: 25px;
+  margin: 0 200px;
+  padding: 0px 60px;
+  padding-bottom: 15px;
+}
+
+.AboutUsContent1 p {
+  padding-bottom: 20px;
+  border-bottom: 1px solid #dddddd;
+  text-align: center;
+}
+
+.AboutUsContent2 {
+  display: flex;
+  padding: 40px 40px 60px;
+  font-size: 18px;
+  line-height: 25px;
+}
+
+.AboutUsContent2Left {
+  padding: 0 20px;
+}
+
+.AboutUsContent2Left h4 {
+  font-size: 20px;
+  padding-bottom: 15px;
+}
+
+.AboutUsContent2Left p {
+  padding-bottom: 15px;
+  text-align: justify;
+}
+
+.AboutUsContent2Right,
+.AboutUsContent2Left {
+  width: 50%;
+}
+
+.AboutUsContent2Right img {
+  width: 100%;
+}

@@ -1,0 +1,183 @@
+html {
+  font-family: "Roboto Condensed", sans-serif;
+}
+
+.CartTitle {
+  display: flex;
+  align-items: center;
+  margin: 50px 90px 40px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #dddddd;
+}
+
+.CartTitle1 {
+  font-size: 25px;
+  font-weight: 400;
+  padding-right: 10px;
+}
+
+.CartTitle2 {
+  font-size: 15px;
+  color: #1c1c1c;
+}
+
+.CartContent {
+  padding: 0 90px;
+  display: flex;
+}
+
+.CartContentLeft {
+  width: 73%;
+  padding: 10px 20px 0 0;
+}
+
+.CartProduct {
+  display: flex;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid #dddddd;
+}
+
+.CartProductImg {
+  width: 30%;
+}
+
+.CartProductImg img {
+  width: 100%;
+}
+
+.CartProductName {
+  width: 35%;
+  padding: 0 20px 0 30px;
+}
+
+.CartProductName h5 {
+  font-size: 18px;
+  font-weight: 500;
+  padding-bottom: 10px;
+}
+
+.CartProductName p {
+  color: #757575;
+  font-weight: 500;
+  padding-bottom: 10px;
+}
+
+.CartProductPrice {
+  width: 15%;
+  font-size: 20px;
+  font-weight: 500;
+  padding-left: 15px;
+}
+
+.CartProductQuantity {
+  width: 20%;
+  padding-left: 15px;
+}
+
+.CartQuantity {
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+
+.CartQuantity button {
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  color: rgba(0, 0, 0, 0.8);
+  cursor: pointer;
+  min-height: 1.5rem;
+  min-width: 2.5rem;
+  padding: 0.5rem;
+}
+
+.CartQuantity p {
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-left: 0;
+  border-right: 0;
+  color: rgba(0, 0, 0, 0.8);
+  cursor: pointer;
+  min-height: 1.5rem;
+  min-width: 2.5rem;
+  padding: 6px;
+}
+
+.CartContentRight {
+  width: 27%;
+}
+
+.provisionalPayment {
+  padding: 15px;
+}
+
+.provisionalPayment1,
+.provisionalPayment2 {
+  display: flex;
+  padding: 20px 0;
+  border-bottom: 1px solid #dddddd;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.Payment1title,
+.Payment2title {
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.Payment1price {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.Payment2price {
+  font-size: 23px;
+  font-weight: 700;
+}
+
+.buttonPayNow,
+.buttonShopping {
+  padding-top: 25px;
+}
+
+.buttonPayNow button {
+  font-size: 16px;
+  font-weight: 400;
+  color: #fff;
+  padding: 16px 10px;
+  border: 1px solid #000;
+  width: 100%;
+  cursor: pointer;
+  background-color: #000;
+  letter-spacing: 1px;
+  transition: transform 0.3s ease, background-position 0.3s ease,
+    color 0.3s ease;
+  background-image: linear-gradient(90deg, #fff 50%, #000 50%);
+  background-size: 200%;
+  background-position: right;
+}
+
+.buttonPayNow button:hover {
+  background-position: left;
+  color: #000;
+}
+
+.buttonShopping button {
+  font-size: 16px;
+  font-weight: 400;
+  color: #000;
+  padding: 16px 10px;
+  border: 1px solid #000;
+  width: 100%;
+  cursor: pointer;
+  background-color: #fff;
+  letter-spacing: 1px;
+  font-family: "Roboto Condensed", sans-serif;
+  transition: transform 0.3s ease;
+}
+
+.buttonShopping button:hover {
+  color: #fff;
+  background-color: #000;
+}

@@ -1,0 +1,176 @@
+html {
+  font-family: "Roboto Condensed", sans-serif;
+}
+
+.ProductPage {
+}
+
+.TitleProductPage {
+  padding: 50px 60px 30px;
+}
+
+.TTPrd {
+  padding: 15px;
+  background-color: #000;
+  color: #fff;
+  font-size: 20px;
+}
+
+.SearchProduct {
+  padding: 15px 200px;
+  margin-top: 25px;
+}
+
+.Search {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.FilterContainer {
+  display: flex;
+  gap: 15px;
+  padding-left: 20px;
+}
+
+.Dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.DropdownButton {
+  background-color: white;
+  border: 1px solid #ccc;
+  font-size: 15px;
+  font-family: "Roboto Condensed", sans-serif;
+  cursor: pointer;
+  padding: 15px 0;
+  letter-spacing: 1px;
+  width: 150px;
+  text-transform: uppercase;
+}
+
+.DropdownButton span {
+  font-size: 12px;
+  margin-left: 5px;
+}
+
+.DropdownButton:hover {
+  color: #fff;
+  background-color: #000;
+}
+
+.DropdownContent {
+  display: none;
+  position: absolute;
+  background-color: white;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  width: 160px;
+}
+
+.Dropdown:hover .DropdownContent {
+  display: block;
+}
+
+.DropdownContent ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.DropdownContent ul li {
+  padding: 12px;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: black;
+}
+
+.DropdownContent ul li:hover {
+  background-color: #f1f1f1;
+}
+
+.DropdownContent ul li.active,
+.DropdownContent ul li:hover {
+  background-color: #000;
+  color: white;
+}
+
+.Product {
+  padding: 10px 40px;
+}
+
+.ProductsList {
+  padding: 20px 10px 35px;
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  align-items: center;
+  justify-content: center;
+  gap: 50px;
+}
+
+.ProductsContent {
+  width: 240px;
+  background-color: #fff;
+}
+
+.ProductsImg {
+  width: 240px;
+  height: 240px;
+  position: relative;
+  /* box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4); */
+}
+
+.ProductsImg img {
+  width: 100%;
+}
+
+.iconOverlay {
+  position: absolute;
+  top: 75%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  gap: 10px;
+  opacity: 0; /* Ẩn icon mặc định */
+  transition: opacity 0.3s ease-in-out;
+}
+
+.iconOverlay i {
+  font-size: 18px;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+}
+
+.ProductsContent:hover .iconOverlay {
+  opacity: 1; /* Hiện icon khi hover */
+}
+
+.ProductsContent:hover img {
+  transform: scale(1.05);
+}
+
+.iconOverlay i:hover {
+  transform: scale(1.2);
+}
+
+.ProductsBody {
+  padding: 12px 0 10px 20px;
+}
+
+.ProductsName {
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.ProductsPrice {
+  padding-top: 5px;
+  font-size: 15px;
+  font-weight: 800;
+  color: #d30000;
+}

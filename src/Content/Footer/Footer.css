@@ -1,0 +1,84 @@
+.FooterContent {
+  display: grid;
+  padding: 50px 60px;
+  color: #fff;
+  grid-template-columns: 45% 25% 30%;
+  background-color: #000;
+}
+
+.FooterContent1Title {
+  font-size: 40px;
+  font-weight: 600;
+  padding: 18px;
+  font-family: "Playfair Display", sans-serif;
+}
+
+.FooterContent1CT {
+  padding: 0 18px 30px 18px;
+  display: flex;
+}
+
+.IconFooter {
+  padding-right: 12px;
+}
+
+.FooterContent2Title {
+  font-size: 18px;
+  padding: 30px 18px;
+}
+
+.FooterContent2Infor {
+  padding: 0 18px 30px 18px;
+}
+
+.FooterContent3SUP {
+}
+
+.TitleSUP {
+  font-size: 20px;
+  font-weight: 500;
+  padding: 30px 18px 25px 0;
+}
+
+.InputSUP input {
+  padding: 8px;
+  width: 100%;
+
+  border: none;
+}
+
+.InputSUP input:focus {
+  outline: none;
+}
+
+.ButtonSignUPSUP {
+  padding-top: 16px;
+}
+
+.ButtonSignUPSUP button {
+  padding: 8px 20px;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  background-color: #333f48;
+  transition: transform 0.3s ease;
+}
+
+.ButtonSignUPSUP button:hover {
+  transform: scale(1.1);
+}
+
+.FooterContent3Social {
+  display: flex;
+  padding-top: 15px;
+}
+
+.Social {
+  font-size: 30px;
+  padding-right: 20px;
+  cursor: pointer;
+}
+
+.Social a {
+  color: #fff;
+}

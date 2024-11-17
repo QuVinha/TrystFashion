@@ -1,0 +1,746 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body,
+html {
+  font-family: "Roboto Condensed", sans-serif;
+}
+
+.Welcome {
+  position: "relative";
+  text-align: center;
+  color: #fff;
+}
+
+.WelcomeShop {
+  letter-spacing: 3px;
+  padding: 20px;
+}
+
+.WelcomeShop h3 {
+  font-size: 17px;
+  font-weight: 900;
+}
+
+.Slogan {
+  font-size: 20px;
+}
+
+.Welcome2 {
+  padding-top: 100px;
+  padding-bottom: 150px;
+}
+
+.welcome-dis p {
+  line-height: 25px;
+}
+
+.welcome-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.welcome-text {
+  font-size: 10rem; /* Kích thước chữ lớn */
+  font-family: "Playfair Display", sans-serif;
+  font-weight: bold;
+  background: url("https://template-genesis.freechurchwebsites.com/app/uploads/2019/08/creative-text.gif")
+    repeat;
+  background-size: cover;
+  -webkit-background-clip: text; /* Hiển thị background chỉ bên trong chữ */
+  background-clip: text; /* Yêu cầu cho một số trình duyệt */
+  color: transparent; /* Làm chữ trong suốt để chỉ thấy background */
+}
+
+.welcome-dis {
+  text-align: center;
+  padding: 0 300px;
+}
+
+.featuredProducts {
+  padding: 170px 140px;
+}
+
+.featProducts {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.featProductsTitle {
+  padding: 15px 0;
+  text-align: center;
+}
+
+.featProductsTitle h1 {
+  font-size: 26px;
+  text-transform: uppercase;
+  font-weight: 600;
+  position: relative;
+}
+
+.featProductsTitle h1:after {
+  content: "";
+  margin: auto;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -7px;
+  height: 3px;
+  width: 120px;
+  background: #000000;
+}
+
+.featProductsList {
+  padding: 20px 10px 35px;
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.featProductsContent {
+  width: 240px;
+  background-color: #fff;
+}
+
+.featProductsImg {
+  width: 240px;
+  height: 240px;
+  position: relative;
+}
+
+.featProductsImg img {
+  width: 100%;
+}
+
+.iconOverlay {
+  position: absolute;
+  top: 75%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  gap: 10px;
+  opacity: 0; /* Ẩn icon mặc định */
+  transition: opacity 0.3s ease-in-out;
+}
+
+.iconOverlay i {
+  font-size: 18px;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.7); /* Nền đen mờ cho icon */
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+}
+
+.featProductsContent:hover .iconOverlay {
+  opacity: 1; /* Hiện icon khi hover */
+}
+
+.featProductsContent:hover img {
+  transform: scale(1.05);
+}
+
+.iconOverlay i:hover {
+  transform: scale(1.2);
+}
+
+.featProductsBody {
+  padding: 12px 0 10px 20px;
+}
+
+.featProductsName {
+  font-size: 15px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.featProductsPrice {
+  padding-top: 5px;
+  font-size: 14px;
+  font-weight: 800;
+  color: #d30000;
+}
+.productPhotoSample {
+  padding: 120px 40px 120px 60px;
+  width: 100%;
+}
+
+.prodPhotoSample {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  overflow: hidden; /* Thêm overflow để ẩn phần ảnh trồi ra */
+}
+
+.prodPSImg {
+  position: relative;
+  width: 65%;
+  height: 700px;
+  overflow: hidden; /* Đảm bảo phần hình ảnh thừa không trồi ra */
+}
+
+.prodPSImg1,
+.prodPSImg2 {
+  position: absolute;
+}
+
+.prodPSImg1 {
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 300px;
+}
+
+.prodPSImg2 {
+  top: 135px;
+  left: 215px;
+  z-index: 2;
+  width: 545px;
+}
+
+.prodPSImg1 img {
+  width: 100%;
+  height: 360px;
+  border-radius: 5px;
+}
+
+.prodPSImg2 img {
+  width: 100%;
+  border-radius: 5px;
+}
+
+.prodPSContent {
+  width: 35%;
+}
+
+.prodPSContentTitle1 h2 {
+  padding-top: 30px;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: "Playfair Display", sans-serif;
+  letter-spacing: 4.7px;
+  position: relative;
+}
+
+.prodPSContentTitle1 h2:after {
+  content: "";
+  margin: auto;
+  position: absolute;
+  left: 0;
+  bottom: -25px;
+  height: 3px;
+  width: 120px;
+  background: #000000;
+}
+
+.prodPSContentTitle2 h2 {
+  padding-top: 40px;
+  font-size: 50px;
+  font-weight: bold;
+  font-family: "Playfair Display", sans-serif;
+}
+
+.prodPSContentPara p {
+  padding-top: 30px;
+  font-size: 18px;
+  text-align: justify;
+  line-height: 1.6;
+}
+
+.prodPSContentButton {
+  padding: 25px 0;
+}
+
+.ButtonprodPS button {
+  font-size: 16px;
+  color: #fff;
+  display: flex;
+  gap: 5px;
+  padding: 14px;
+  border: none;
+  border-radius: 5px;
+  font-family: "Roboto Condensed", sans-serif;
+  background-color: #d30000;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.ButtonprodPS button:hover {
+  transform: scale(1.1);
+}
+
+.productVideoWC5 {
+  padding: 120px;
+}
+
+.prodVideoWC5 {
+  display: flex;
+  background-color: #fff;
+}
+
+.vidProductWC5 {
+  width: 35%;
+  padding: 20px 20px 20px 20px;
+  background-color: #000;
+}
+
+.vidProduct2WC5 {
+  width: 65%;
+  padding-left: 20px;
+}
+
+.vidProduct2WC5title {
+  padding: 18px;
+  text-align: center;
+}
+
+.vidProduct2WC5title h1 {
+  font-size: 26px;
+  text-transform: uppercase;
+  font-weight: 600;
+  position: relative;
+}
+
+.vidProduct2WC5title h1:after {
+  content: "";
+  margin: auto;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -7px;
+  height: 3px;
+  width: 120px;
+  background: #000000;
+}
+
+.productWC5 {
+  display: flex;
+  height: 355px;
+  padding-top: 10px;
+}
+
+.productWC5Img {
+  width: 45%;
+  height: 285px;
+  /* box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4); */
+}
+
+.productWC5Img img {
+  width: 100%;
+  height: 100%;
+}
+
+.productWC5Content {
+  width: 55%;
+  height: 285px;
+  padding-left: 40px;
+}
+
+.iconOverlay2 {
+  position: absolute;
+  top: 50%;
+  left: 51%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  gap: 10px;
+  opacity: 0; /* Ẩn icon mặc định */
+  transition: opacity 0.3s ease-in-out;
+}
+
+.iconOverlay2 i {
+  font-size: 18px;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.7); /* Nền đen mờ cho icon */
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+}
+
+.iconOverlay2 i:hover {
+  transform: scale(1.2);
+}
+
+.productWC5Img:hover .iconOverlay2 {
+  opacity: 1; /* Hiện icon khi hover */
+}
+
+.productWC5Img:hover img {
+  transform: scale(1.05);
+}
+
+.productWC5name {
+  font-size: 23px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.productWC5price {
+  padding-top: 10px;
+  font-size: 25px;
+  font-weight: 800;
+  color: #d30000;
+}
+
+.productWC5size,
+.productWC5color {
+  padding-top: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.productWC5size1,
+.productWC5color1 {
+  font-size: inherit;
+  font-weight: 400;
+  width: 110px;
+  color: #333f48;
+}
+
+.productWC5color2,
+.productWC5size2 {
+  width: 100%;
+}
+
+.productWC5size2 button,
+.productWC5color2 button {
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+  color: rgba(0, 0, 0, 0.8);
+  cursor: pointer;
+  min-height: 2.5rem;
+  min-width: 5rem;
+  padding: 0.5rem;
+  margin-right: 15px;
+  position: relative;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.productWC5color2 button:hover,
+.productWC5size2 button:hover {
+  background-color: #f5f5f5;
+  border-color: #000;
+}
+
+.productWC5color2 button.selected,
+.productWC5size2 button.selected {
+  border-color: #000;
+}
+
+.productWC5size2 .corner-check,
+.productWC5color2 .corner-check {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  background-color: #d30000;
+  clip-path: polygon(100% 0, 0 100%, 100% 100%);
+}
+
+.productWC5size2 .corner-check::after,
+.productWC5color2 .corner-check::after {
+  content: "✓";
+  color: white;
+  position: absolute;
+  bottom: 0px;
+  right: 1px;
+  font-size: 12px;
+}
+
+.productWC5quantity {
+  padding-top: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.productWC5quantity1 {
+  font-size: inherit;
+  font-weight: 400;
+  width: 110px;
+  color: #757575;
+}
+
+.productWC5quantity2 {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+
+.productWC5quantity2 button {
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  color: rgba(0, 0, 0, 0.8);
+  cursor: pointer;
+  min-height: 2.5rem;
+  min-width: 3.5rem;
+  padding: 0.5rem;
+}
+
+.productWC5quantity2 p {
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-left: 0;
+  border-right: 0;
+  color: rgba(0, 0, 0, 0.8);
+  cursor: pointer;
+  min-height: 2.5rem;
+  min-width: 3.5rem;
+  padding: 0.5rem;
+}
+
+.productWC5quantity2 .numQuantity {
+  width: 63px;
+}
+
+.productWC5Buy {
+  padding-top: 22px;
+  display: flex;
+  align-items: center;
+}
+
+.productWC5BtnBuy .btnAdd {
+  background: #fff;
+  font-size: 15px;
+  border: 1px solid #d30000;
+  border-radius: 2px;
+  color: #d30000;
+  cursor: pointer;
+  min-height: 2.5rem;
+  min-width: 9rem;
+  padding: 0.5rem;
+  margin-right: 15px;
+  transition: transform 0.3s ease;
+}
+
+.productWC5BtnBuy .btnBuy {
+  background: #fff;
+  font-size: 15px;
+  border: none;
+  border-radius: 2px;
+  background-color: #d30000;
+  color: #fff;
+  cursor: pointer;
+  min-height: 2.5rem;
+  min-width: 9rem;
+  padding: 0.5rem;
+  margin-right: 15px;
+  transition: transform 0.3s ease;
+}
+
+.productWC5BtnBuy .btnAdd:hover,
+.productWC5BtnBuy .btnBuy:hover {
+  transform: scale(1.1);
+}
+
+.productWC5description {
+  padding-right: 20px;
+}
+
+.productWC5desTitle {
+  font-size: 23px;
+  background-color: #eeeeee;
+  padding: 10px;
+  font-weight: 700;
+}
+
+.productWC5desContent {
+  padding-top: 15px;
+}
+
+.productWC5desContent p {
+  font-size: 17px;
+  padding-bottom: 15px;
+  text-align: justify;
+}
+
+.Welcome6 {
+  display: flex;
+  justify-content: space-between;
+  padding: 110px 0;
+  background-color: #eeeeee;
+}
+
+.Welcome6Left {
+  flex: 1;
+  padding-right: 20px;
+}
+
+.WC6LContent {
+  background-color: #fff;
+  position: absolute;
+  max-width: 740px;
+  margin-top: 80px;
+  padding: 50px 120px 87px 170px;
+}
+
+.WC6Ltitlte1 {
+  /* color: #d18a87; */
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.WC6Ltitlte2 {
+  font-size: 60px;
+  font-weight: 500;
+  padding-top: 30px;
+  margin-bottom: 50px;
+  font-family: "Cormorant Garamond", Sans-serif;
+}
+
+.WC6Ldescription {
+  font-size: 18px;
+  line-height: 1.6;
+  text-align: justify;
+}
+
+.Welcome6Right {
+  flex: 1;
+  max-width: 50%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.Welcome6Right img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.Welcome7Contact {
+  padding: 100px;
+}
+
+.WC7Contact {
+  padding: 40px;
+  background-color: #fff;
+}
+
+.WC7ContactTitle1 {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 4.7px;
+}
+
+.WC7ContactTitle2 {
+  text-align: center;
+  font-size: 47px;
+  font-weight: 500;
+  letter-spacing: 4.7px;
+}
+
+.WC7ContactContent {
+  display: flex;
+  padding-top: 30px;
+}
+
+.WC7ContactContentLeft {
+  padding-right: 15px;
+  margin-right: 20px;
+  width: 40%;
+  border-right: 1px solid #dddddd;
+}
+
+.WC7ContactContentLeft h4 {
+  font-size: 24px;
+}
+
+.WC7LeftContent {
+  padding-top: 25px;
+  text-align: justify;
+  line-height: 25px;
+}
+
+.WC7Left {
+  display: flex;
+  padding-top: 30px;
+}
+
+.IconWC7Left {
+  padding-right: 12px;
+}
+
+.WC7ContactContentRight {
+  width: 60%;
+}
+
+.FormContactInfo {
+  display: flex;
+  gap: 10px;
+  padding-bottom: 15px;
+}
+
+.FormContactInfo input {
+  padding: 6px 16px;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 40px;
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background-color: #f9f9f9;
+}
+
+.FormContactInfo input::placeholder {
+  color: #999999;
+}
+
+.FormContactInfo input:focus,
+textarea:focus {
+  border-color: #333333;
+  outline: none;
+}
+
+textarea {
+  width: 100%;
+  height: 150px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  resize: none;
+  background-color: #f9f9f9;
+}
+
+textarea::placeholder {
+  color: #999999;
+}
+
+.ButtonSubmit {
+  padding-top: 15px;
+}
+
+.ButtonSubmit button {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  padding: 18px 20px;
+  border: 1px solid #000;
+  width: 100%;
+  cursor: pointer;
+  background-color: #000;
+  letter-spacing: 1px;
+  font-family: "Roboto Condensed", sans-serif;
+  transition: transform 0.3s ease, background-position 0.3s ease,
+    color 0.3s ease;
+  background-image: linear-gradient(90deg, #fff 50%, #000 50%);
+  background-size: 200%;
+  background-position: right;
+}
+
+.ButtonSubmit button:hover {
+  background-position: left;
+  color: #000;
+}
