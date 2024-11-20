@@ -53,7 +53,7 @@ const Login = ({ setUserName }) => {
     if (!isValid) return;
 
     axios
-      .post("http://192.168.1.24:8080/api/v1/users/login", {
+      .post("http://192.168.1.60:8080/api/v1/users/login", {
         user_name: username,
         password: password,
       })

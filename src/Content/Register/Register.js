@@ -2,37 +2,46 @@ import React, { useState } from "react";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import "./Register.css";
+import axios from "axios";
 import isEmpty from "validator/lib/isEmpty";
-import emailValidator from "email-validator";
+import { useNavigate } from "react-router-dom";
 import BG4HomePage from "../../../src/assets/img/BGHomepage/BGR4home.jpg";
 
 const Register = () => {
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
+  const [fullname, setFullname] = useState("");
+  const [user_name, setUser_name] = useState("");
   const [password, setPassword] = useState("");
+  const [address, setAddress] = useState("");
+  const [phone_number, setPhone_number] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [birthday, setBirthday] = useState("");
   const [validationMsg, setValidationMsg] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const currentDate = new Date().toISOString().split("T")[0];
+  const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
-  const onChangeEmail = (event) => {
+  const onChangeFullname = (event) => {
     const value = event.target.value;
-    setEmail(value);
+    setFullname(value);
   };
 
   const onChangeUsername = (event) => {
     const value = event.target.value;
-    setUsername(value);
+    setUser_name(value);
   };
 
   const onChangePassword = (event) => {
     const value = event.target.value;
     setPassword(value);
+  };
+
+  const onChangeAddress = (event) => {
+    const value = event.target.value;
+    setAddress(value);
   };
 
   const onChangeConfirmPassword = (event) => {
@@ -49,18 +58,20 @@ const Register = () => {
     const msg = {};
     const regex = /^[a-zA-Z0-9]+$/;
 
-    if (isEmpty(email)) {
-      msg.email = "Email không được để trống!";
-    } else if (!emailValidator.validate(email)) {
-      msg.email = "Email không đúng định dạng!";
+    if (isEmpty(fullname)) {
+      msg.fullname = "Họ và tên không được để trống!";
     }
 
-    if (isEmpty(username)) {
-      msg.username = "Tên tài khoản không được để trống!";
-    } else if (username.length < 3 || username.length > 8) {
-      msg.username = "Tên tài khoản phải từ 3-8 kí tự!";
-    } else if (!regex.test(username)) {
-      msg.username = "Tên tài khoản chỉ chứa các ký tự chữ cái, chữ số!";
+    if (isEmpty(address)) {
+      msg.address = "Địa chỉ không được để trống!";
+    }
+
+    if (isEmpty(user_name)) {
+      msg.user_name = "Tên tài khoản không được để trống!";
+    } else if (user_name.length < 3 || user_name.length > 8) {
+      msg.user_name = "Tên tài khoản phải từ 3-8 kí tự!";
+    } else if (!regex.test(user_name)) {
+      msg.user_name = "Tên tài khoản chỉ chứa các ký tự chữ cái, chữ số!";
     }
 
     if (isEmpty(password)) {
@@ -84,16 +95,39 @@ const Register = () => {
     return true;
   };
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     const isValid = validateAll();
     if (!isValid) return;
 
+    const userData = {
+      fullname: fullname,
+      user_name: user_name,
+      password: password,
+      address: address,
+      birthday: birthday,
+    };
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/api/v1/users/register",
+        userData
+      );
+      alert("Đăng ký thành công");
+      navigate("/login");
+
+      console.log("Registration successful:", response.data);
+    } catch (error) {
+      console.error("Registration failed:", error.response.data);
+    }
+
     // Nếu hợp lệ, thực hiện các thao tác đăng ký khác
     console.log("Thông tin đăng ký hợp lệ:", {
-      email,
-      username,
+      fullname,
+      user_name,
       password,
       birthday,
+      address,
+      role: 1,
     });
   };
 
@@ -129,33 +163,33 @@ const Register = () => {
             <div className="InputRegister">
               <div className="NameAccountRegister">
                 <input
-                  type="email"
-                  name="email"
-                  placeholder="Email"
-                  value={email}
-                  onChange={onChangeEmail}
+                  type="text"
+                  name="fullname"
+                  placeholder="Họ và tên"
+                  value={fullname}
+                  onChange={onChangeFullname}
                   className={`form-control-dn ${
-                    validationMsg.email ? "error" : ""
+                    validationMsg.fullname ? "error" : ""
                   }`} // Thay đổi class khi có lỗi
                 />
                 <div className="Validate-Notification">
-                  <p className="Validator">{validationMsg.email}</p>
+                  <p className="Validator">{validationMsg.fullname}</p>
                 </div>
               </div>
 
               <div className="NameAccountRegister">
                 <input
                   type="text"
-                  name="username"
+                  name="user_name"
                   placeholder="Tên tài khoản"
-                  value={username}
+                  value={user_name}
                   onChange={onChangeUsername}
                   className={`form-control-dn ${
-                    validationMsg.username ? "error" : ""
+                    validationMsg.user_name ? "error" : ""
                   }`} // Thay đổi class khi có lỗi
                 />
                 <div className="Validate-Notification">
-                  <p className="Validator">{validationMsg.username}</p>
+                  <p className="Validator">{validationMsg.user_name}</p>
                 </div>
               </div>
 
@@ -220,6 +254,22 @@ const Register = () => {
 
                 <div className="Validate-Notification">
                   <p className="Validator">{validationMsg.confirmPassword}</p>
+                </div>
+              </div>
+
+              <div className="NameAccountRegister">
+                <input
+                  type="text"
+                  name="address"
+                  placeholder="Địa chỉ"
+                  value={address}
+                  onChange={onChangeAddress}
+                  className={`form-control-dn ${
+                    validationMsg.address ? "error" : ""
+                  }`} // Thay đổi class khi có lỗi
+                />
+                <div className="Validate-Notification">
+                  <p className="Validator">{validationMsg.address}</p>
                 </div>
               </div>
 

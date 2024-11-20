@@ -42,37 +42,35 @@ const Product = () => {
     console.log("Giá đã chọn: ", price);
   };
 
-  useEffect(() => {
-    fetch("http://192.168.1.24:8080/api/v1/products?page=0&limit=12")
-      .then((res) => res.json()) // Phân tích dữ liệu trả về
-      .then((data) => {
-        console.log("Received data:", data); // Kiểm tra dữ liệu trả về
-        if (Array.isArray(data)) {
-          setProducts(data); // Nếu dữ liệu là mảng, gán cho state products
-        } else if (data.products) {
-          // Nếu dữ liệu là đối tượng chứa mảng products
-          setProducts(data.products); // Gán mảng products từ response vào state
-        } else {
-          setError("Không có dữ liệu sản phẩm");
-        }
-      })
-      .catch((error) => {
-        console.log("Error fetching products:", error);
-        setError("Lỗi khi tải dữ liệu");
-      })
-      .finally(() => {
-        setLoading(false); // Set loading false khi fetch xong
-      });
-  }, []);
+  // useEffect(() => {
+  //   fetch("http://192.168.1.60:8080/api/v1/products?page=0&limit=12")
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       console.log("Received data:", data);
+  //       if (Array.isArray(data)) {
+  //         setProducts(data);
+  //       } else if (data.products) {
+  //         setProducts(data.products);
+  //       } else {
+  //         setError("Không có dữ liệu sản phẩm");
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.log("Error fetching products:", error);
+  //       setError("Lỗi khi tải dữ liệu");
+  //     })
+  //     .finally(() => {
+  //       setLoading(false);
+  //     });
+  // }, []);
 
-  // Hiển thị trạng thái loading hoặc error
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  // if (loading) {
+  //   return <div>Loading...</div>;
+  // }
 
-  if (error) {
-    return <div>{error}</div>;
-  }
+  // if (error) {
+  //   return <div>{error}</div>;
+  // }
 
   return (
     <div id="main">
@@ -169,11 +167,15 @@ const Product = () => {
           </div>
         </div>
 
-        <div className="Product">
+        {/* <div className="Product">
           <div className="ProductsList">
             {products.map((product) => (
               <div key={product.id} className="ProductsContent">
                 <div className="ProductsImg">
+                  <img
+                    src={`data:image/jpeg;base64,${product.url}`}
+                    alt={product.name}
+                  />
                   <div className="iconOverlay">
                     <i className="fa-solid fa-magnifying-glass"></i>
                     <i className="fas fa-heart"></i>
@@ -188,23 +190,320 @@ const Product = () => {
                   <p className="ProductsPrice">
                     {product.price.toLocaleString()} đ
                   </p>
-                  {/* <p className="ProductsCategory">
-                    Danh mục: {product.category.name}{" "}
-                    
-                  </p>
-                  <p className="ProductsColor">Màu sắc: {product.color}</p>
-                  <p className="ProductsDescription">
-                    {product.description.length > 100
-                      ? `${product.description.slice(0, 100)}...`
-                      : product.description}{" "}
-                   
-                  </p>
-                  <p className="ProductsQuantity">
-                    Số lượng: {product.quantity}
-                  </p> */}
                 </div>
               </div>
             ))}
+          </div>
+        </div> */}
+
+        <div className="Product">
+          <div className="ProductsList">
+            <div className="ProductsContent">
+              <div className="ProductsImg">
+                <img src={FeatProducts1} />
+                <div className="iconOverlay">
+                  <i className="fa-solid fa-magnifying-glass"></i>
+                  <i className="fas fa-heart"></i>
+                  <i className="fas fa-shopping-cart"></i>
+                </div>
+              </div>
+              <div className="ProductsBody">
+                <p className="ProductsName">Áo Phông EVOLVEMENT 26159</p>
+                <p className="ProductsPrice">199.000đ</p>
+              </div>
+            </div>
+
+            <div className="ProductsContent">
+              <div className="ProductsImg">
+                <img src={FeatProducts2} />
+                <div className="iconOverlay">
+                  <i className="fa-solid fa-magnifying-glass"></i>
+                  <i className="fas fa-heart"></i>
+                  <i className="fas fa-shopping-cart"></i>
+                </div>
+              </div>
+              <div className="ProductsBody">
+                <p className="ProductsName">Áo thun SpickHead Black</p>
+                <p className="ProductsPrice">200.000đ</p>
+              </div>
+            </div>
+
+            <div className="ProductsContent">
+              <div className="ProductsImg">
+                <img src={FeatProducts3} />
+                <div className="iconOverlay">
+                  <i className="fa-solid fa-magnifying-glass"></i>
+                  <i className="fas fa-heart"></i>
+                  <i className="fas fa-shopping-cart"></i>
+                </div>
+              </div>
+              <div className="ProductsBody">
+                <p className="ProductsName">Áo thun SpickHead White</p>
+                <p className="ProductsPrice">185.000đ</p>
+              </div>
+            </div>
+
+            <div className="ProductsContent">
+              <div className="ProductsImg">
+                <img src={FeatProducts4} />
+                <div className="iconOverlay">
+                  <i className="fa-solid fa-magnifying-glass"></i>
+                  <i className="fas fa-heart"></i>
+                  <i className="fas fa-shopping-cart"></i>
+                </div>
+              </div>
+              <div className="ProductsBody">
+                <p className="ProductsName">Áo Phông Enonement YHT0574</p>
+                <p className="ProductsPrice">209.000đ</p>
+              </div>
+            </div>
+          </div>
+          <div className="ProductsList">
+            <div className="ProductsContent">
+              <div className="ProductsImg">
+                <img src={FeatProducts1} />
+                <div className="iconOverlay">
+                  <i className="fa-solid fa-magnifying-glass"></i>
+                  <i className="fas fa-heart"></i>
+                  <i className="fas fa-shopping-cart"></i>
+                </div>
+              </div>
+              <div className="ProductsBody">
+                <p className="ProductsName">Áo Phông EVOLVEMENT 26159</p>
+                <p className="ProductsPrice">199.000đ</p>
+              </div>
+            </div>
+
+            <div className="ProductsContent">
+              <div className="ProductsImg">
+                <img src={FeatProducts2} />
+                <div className="iconOverlay">
+                  <i className="fa-solid fa-magnifying-glass"></i>
+                  <i className="fas fa-heart"></i>
+                  <i className="fas fa-shopping-cart"></i>
+                </div>
+              </div>
+              <div className="ProductsBody">
+                <p className="ProductsName">Áo thun SpickHead Black</p>
+                <p className="ProductsPrice">200.000đ</p>
+              </div>
+            </div>
+
+            <div className="ProductsContent">
+              <div className="ProductsImg">
+                <img src={FeatProducts3} />
+                <div className="iconOverlay">
+                  <i className="fa-solid fa-magnifying-glass"></i>
+                  <i className="fas fa-heart"></i>
+                  <i className="fas fa-shopping-cart"></i>
+                </div>
+              </div>
+              <div className="ProductsBody">
+                <p className="ProductsName">Áo thun SpickHead White</p>
+                <p className="ProductsPrice">185.000đ</p>
+              </div>
+            </div>
+
+            <div className="ProductsContent">
+              <div className="ProductsImg">
+                <img src={FeatProducts4} />
+                <div className="iconOverlay">
+                  <i className="fa-solid fa-magnifying-glass"></i>
+                  <i className="fas fa-heart"></i>
+                  <i className="fas fa-shopping-cart"></i>
+                </div>
+              </div>
+              <div className="ProductsBody">
+                <p className="ProductsName">Áo Phông Enonement YHT0574</p>
+                <p className="ProductsPrice">209.000đ</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="ProductsList">
+            <div className="ProductsContent">
+              <div className="ProductsImg">
+                <img src={FeatProducts1} />
+                <div className="iconOverlay">
+                  <i className="fa-solid fa-magnifying-glass"></i>
+                  <i className="fas fa-heart"></i>
+                  <i className="fas fa-shopping-cart"></i>
+                </div>
+              </div>
+              <div className="ProductsBody">
+                <p className="ProductsName">Áo Phông EVOLVEMENT 26159</p>
+                <p className="ProductsPrice">199.000đ</p>
+              </div>
+            </div>
+
+            <div className="ProductsContent">
+              <div className="ProductsImg">
+                <img src={FeatProducts2} />
+                <div className="iconOverlay">
+                  <i className="fa-solid fa-magnifying-glass"></i>
+                  <i className="fas fa-heart"></i>
+                  <i className="fas fa-shopping-cart"></i>
+                </div>
+              </div>
+              <div className="ProductsBody">
+                <p className="ProductsName">Áo thun SpickHead Black</p>
+                <p className="ProductsPrice">200.000đ</p>
+              </div>
+            </div>
+
+            <div className="ProductsContent">
+              <div className="ProductsImg">
+                <img src={FeatProducts3} />
+                <div className="iconOverlay">
+                  <i className="fa-solid fa-magnifying-glass"></i>
+                  <i className="fas fa-heart"></i>
+                  <i className="fas fa-shopping-cart"></i>
+                </div>
+              </div>
+              <div className="ProductsBody">
+                <p className="ProductsName">Áo thun SpickHead White</p>
+                <p className="ProductsPrice">185.000đ</p>
+              </div>
+            </div>
+
+            <div className="ProductsContent">
+              <div className="ProductsImg">
+                <img src={FeatProducts4} />
+                <div className="iconOverlay">
+                  <i className="fa-solid fa-magnifying-glass"></i>
+                  <i className="fas fa-heart"></i>
+                  <i className="fas fa-shopping-cart"></i>
+                </div>
+              </div>
+              <div className="ProductsBody">
+                <p className="ProductsName">Áo Phông Enonement YHT0574</p>
+                <p className="ProductsPrice">209.000đ</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="ProductsList">
+            <div className="ProductsContent">
+              <div className="ProductsImg">
+                <img src={FeatProducts1} />
+                <div className="iconOverlay">
+                  <i className="fa-solid fa-magnifying-glass"></i>
+                  <i className="fas fa-heart"></i>
+                  <i className="fas fa-shopping-cart"></i>
+                </div>
+              </div>
+              <div className="ProductsBody">
+                <p className="ProductsName">Áo Phông EVOLVEMENT 26159</p>
+                <p className="ProductsPrice">199.000đ</p>
+              </div>
+            </div>
+
+            <div className="ProductsContent">
+              <div className="ProductsImg">
+                <img src={FeatProducts2} />
+                <div className="iconOverlay">
+                  <i className="fa-solid fa-magnifying-glass"></i>
+                  <i className="fas fa-heart"></i>
+                  <i className="fas fa-shopping-cart"></i>
+                </div>
+              </div>
+              <div className="ProductsBody">
+                <p className="ProductsName">Áo thun SpickHead Black</p>
+                <p className="ProductsPrice">200.000đ</p>
+              </div>
+            </div>
+
+            <div className="ProductsContent">
+              <div className="ProductsImg">
+                <img src={FeatProducts3} />
+                <div className="iconOverlay">
+                  <i className="fa-solid fa-magnifying-glass"></i>
+                  <i className="fas fa-heart"></i>
+                  <i className="fas fa-shopping-cart"></i>
+                </div>
+              </div>
+              <div className="ProductsBody">
+                <p className="ProductsName">Áo thun SpickHead White</p>
+                <p className="ProductsPrice">185.000đ</p>
+              </div>
+            </div>
+
+            <div className="ProductsContent">
+              <div className="ProductsImg">
+                <img src={FeatProducts4} />
+                <div className="iconOverlay">
+                  <i className="fa-solid fa-magnifying-glass"></i>
+                  <i className="fas fa-heart"></i>
+                  <i className="fas fa-shopping-cart"></i>
+                </div>
+              </div>
+              <div className="ProductsBody">
+                <p className="ProductsName">Áo Phông Enonement YHT0574</p>
+                <p className="ProductsPrice">209.000đ</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="ProductsList">
+            <div className="ProductsContent">
+              <div className="ProductsImg">
+                <img src={FeatProducts1} />
+                <div className="iconOverlay">
+                  <i className="fa-solid fa-magnifying-glass"></i>
+                  <i className="fas fa-heart"></i>
+                  <i className="fas fa-shopping-cart"></i>
+                </div>
+              </div>
+              <div className="ProductsBody">
+                <p className="ProductsName">Áo Phông EVOLVEMENT 26159</p>
+                <p className="ProductsPrice">199.000đ</p>
+              </div>
+            </div>
+
+            <div className="ProductsContent">
+              <div className="ProductsImg">
+                <img src={FeatProducts2} />
+                <div className="iconOverlay">
+                  <i className="fa-solid fa-magnifying-glass"></i>
+                  <i className="fas fa-heart"></i>
+                  <i className="fas fa-shopping-cart"></i>
+                </div>
+              </div>
+              <div className="ProductsBody">
+                <p className="ProductsName">Áo thun SpickHead Black</p>
+                <p className="ProductsPrice">200.000đ</p>
+              </div>
+            </div>
+
+            <div className="ProductsContent">
+              <div className="ProductsImg">
+                <img src={FeatProducts3} />
+                <div className="iconOverlay">
+                  <i className="fa-solid fa-magnifying-glass"></i>
+                  <i className="fas fa-heart"></i>
+                  <i className="fas fa-shopping-cart"></i>
+                </div>
+              </div>
+              <div className="ProductsBody">
+                <p className="ProductsName">Áo thun SpickHead White</p>
+                <p className="ProductsPrice">185.000đ</p>
+              </div>
+            </div>
+
+            <div className="ProductsContent">
+              <div className="ProductsImg">
+                <img src={FeatProducts4} />
+                <div className="iconOverlay">
+                  <i className="fa-solid fa-magnifying-glass"></i>
+                  <i className="fas fa-heart"></i>
+                  <i className="fas fa-shopping-cart"></i>
+                </div>
+              </div>
+              <div className="ProductsBody">
+                <p className="ProductsName">Áo Phông Enonement YHT0574</p>
+                <p className="ProductsPrice">209.000đ</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

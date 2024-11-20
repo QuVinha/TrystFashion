@@ -1,10 +1,47 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import MapComponent from "./Map";
+import emailjs from "@emailjs/browser";
 import "./Contact.css";
 
 const Contact = () => {
+  const [formData, setFormData] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    console.log("Form data submitted:", formData);
+
+    emailjs
+      .send(
+        "service_hua7xai",
+        "template_96zujt9",
+        formData,
+        "mzkpytI6V136WzlnF"
+      )
+      .then(
+        (response) => {
+          console.log("Message sent successfully:", response);
+          alert("Message sent successfully!");
+        },
+        (error) => {
+          console.error("Failed to send message:", error);
+          alert("Failed to send message, please try again.");
+        }
+      );
+  };
+
   return (
     <div id="main">
       <Header />
@@ -66,27 +103,48 @@ const Contact = () => {
                 </div>
               </div>
               <div className="WC7ContactContentRight">
-                <div className="FormContact">
+                <form className="FormContact" onSubmit={handleSubmit}>
                   <div className="FormContactInfo">
-                    <input type="text" placeholder="First Name" />
-                    <input type="text" placeholder="Last Name" />
+                    <input
+                      type="text"
+                      name="first_name"
+                      placeholder="First Name"
+                      onChange={handleChange}
+                    />
+                    <input
+                      type="text"
+                      name="last_name"
+                      placeholder="Last Name"
+                      onChange={handleChange}
+                    />
                   </div>
                   <div className="FormContactInfo">
-                    <input type="email" placeholder="E-mail Address" />
-                    <input type="text" placeholder="Phone" />
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="E-mail Address"
+                      onChange={handleChange}
+                    />
+                    <input
+                      type="text"
+                      name="phone"
+                      placeholder="Phone"
+                      onChange={handleChange}
+                    />
                   </div>
                   <div className="FormContactMessage">
                     <textarea
                       id="message"
                       name="message"
                       placeholder="Enter your message"
+                      onChange={handleChange}
                     ></textarea>
                   </div>
 
                   <div className="ButtonSubmit">
-                    <button>SUBMIT MESSAGE</button>
+                    <button type="submit">SUBMIT MESSAGE</button>
                   </div>
-                </div>
+                </form>
               </div>
             </div>
           </div>
