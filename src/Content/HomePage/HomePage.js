@@ -4,10 +4,15 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import emailjs from "@emailjs/browser";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import AoJacket from "../../../src/assets/img/featProducts/1.png";
 import BG2HomePage from "../../../src/assets/img/BGHomepage/BGR2-Homepage.jpg";
 import BG1HomePage from "../../../src/assets/img/BGHomepage/BGhome.jpg";
-import BG3HomePage from "../../../src/assets/img/BGHomepage/BGR3home.jpg";
+import Thy from "../../../src/assets/img/BGHomepage/thy.jpg";
+import Thy1 from "../../../src/assets/img/BGHomepage/thy1.jpg";
+import Thy2 from "../../../src/assets/img/BGHomepage/thy2.jpg";
 import BG7HomePage from "../../../src/assets/img/BGHomepage/BG3.jpg";
 import ImgPhotoSimple1 from "../../../src/assets/img/proDPSample/1.jpg";
 import ImgPhotoSimple2 from "../../../src/assets/img/proDPSample/2.jpg";
@@ -16,7 +21,6 @@ import FeatProducts1 from "../../../src/assets/img/featProducts/featPrd1.jpg";
 import FeatProducts2 from "../../../src/assets/img/featProducts/featPrd2.jpg";
 import FeatProducts3 from "../../../src/assets/img/featProducts/featPrd3.jpg";
 import FeatProducts4 from "../../../src/assets/img/featProducts/featPrd4.jpg";
-import vidProdHome from "../../../src/assets/img/VidHomePage.mp4";
 import vidHome from "../../../src/assets/img/VideoHome.mp4";
 
 const HomePage = () => {
@@ -123,6 +127,19 @@ const HomePage = () => {
       );
   };
 
+  const settings = {
+    infinite: true, // Vòng lặp vô hạn
+    speed: 500, // Tốc độ chuyển đổi
+    slidesToShow: 1, // Hiển thị 1 ảnh tại 1 thời điểm
+    slidesToScroll: 1, // Di chuyển 1 slide mỗi lần
+    autoplay: true, // Tự động chuyển
+    autoplaySpeed: 2050, // Thời gian chuyển đổi ảnh
+    arrows: false, // Ẩn nút mũi tên
+    lazyLoad: "progressive",
+  };
+
+  const images = [Thy, Thy1, Thy2];
+
   return (
     <div id="main">
       <Header />
@@ -136,28 +153,39 @@ const HomePage = () => {
             height: "700px",
           }}
         >
-          <div
-            style={{
-              backgroundSize: "cover",
-              backgroundImage: `url(${BG3HomePage})`,
-              backgroundPosition: "center",
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              zIndex: 1,
-            }}
-          ></div>
+          {/* Slider */}
+          <Slider {...settings}>
+            {images.map((image, index) => (
+              <div key={index}>
+                <div
+                  style={{
+                    backgroundSize: "cover",
+                    backgroundImage: `url(${image})`,
+                    backgroundPosition: "center",
+                    width: "100%",
+                    height: "100vh",
+                    transition: "background-image 0.5s ease-in-out",
+                  }}
+                ></div>
+              </div>
+            ))}
+          </Slider>
 
           <div
             className="Welcome"
             style={{
-              position: "relative",
+              position: "absolute", // Đặt nội dung nằm trên slider
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
               zIndex: 2,
               color: "white",
               textAlign: "center",
-              paddingTop: "200px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
             <div className="WelcomeShop">

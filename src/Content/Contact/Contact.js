@@ -18,8 +18,32 @@ const Contact = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const validateForm = () => {
+    if (
+      !formData.first_name.trim() ||
+      !formData.last_name.trim() ||
+      !formData.email.trim() ||
+      !formData.phone.trim() ||
+      !formData.message.trim()
+    ) {
+      alert("Vui lòng nhập đầy đủ thông tin."); // Thông báo lỗi
+      return false;
+    }
+
+    if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      alert("Email không hợp lệ."); // Kiểm tra định dạng email
+      return false;
+    }
+
+    return true; // Không có lỗi
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return; // Dừng nếu form không hợp lệ
+    }
 
     console.log("Form data submitted:", formData);
 
@@ -69,7 +93,7 @@ const Contact = () => {
                 <h4>Send a Message</h4>
                 <div className="WC7Left">
                   <div className="IconWC7Left">
-                    <i class="fa-solid fa-location-dot"></i>
+                    <i className="fa-solid fa-location-dot"></i>
                   </div>
                   <div className="ContentWC7Left">
                     <p>21 Hồ Đắc Di, P. Nam Đồng, Đống Đa, Hà Nội, Việt Nam</p>
@@ -78,7 +102,7 @@ const Contact = () => {
 
                 <div className="WC7Left">
                   <div className="IconWC7Left">
-                    <i class="fa-solid fa-phone"></i>
+                    <i className="fa-solid fa-phone"></i>
                   </div>
                   <div className="ContentWC7Left">
                     <p>096 925 31 66</p>
@@ -87,7 +111,7 @@ const Contact = () => {
 
                 <div className="WC7Left">
                   <div className="IconWC7Left">
-                    <i class="fa-solid fa-envelope"></i>
+                    <i className="fa-solid fa-envelope"></i>
                   </div>
                   <div className="ContentWC7Left">
                     <p>tryst.21hdd@gmail.com</p>
