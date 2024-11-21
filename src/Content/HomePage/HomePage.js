@@ -133,7 +133,7 @@ const HomePage = () => {
     slidesToShow: 1, // Hiển thị 1 ảnh tại 1 thời điểm
     slidesToScroll: 1, // Di chuyển 1 slide mỗi lần
     autoplay: true, // Tự động chuyển
-    autoplaySpeed: 2500, // Thời gian chuyển đổi ảnh
+    autoplaySpeed: 2800, // Thời gian chuyển đổi ảnh
     arrows: false, // Ẩn nút mũi tên
     lazyLoad: "progressive",
   };
