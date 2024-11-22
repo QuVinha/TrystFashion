@@ -103,6 +103,26 @@ const HomePage = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const validateForm = () => {
+    if (
+      !formData.first_name.trim() ||
+      !formData.last_name.trim() ||
+      !formData.email.trim() ||
+      !formData.phone.trim() ||
+      !formData.message.trim()
+    ) {
+      alert("Vui lòng nhập đầy đủ thông tin.");
+      return false;
+    }
+
+    if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      alert("Email không hợp lệ.");
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 

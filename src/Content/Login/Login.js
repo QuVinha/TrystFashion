@@ -152,7 +152,7 @@ const Login = ({ setUserName }) => {
                   // onKeyDown={handleKeyDown}
                   className={`form-control-dn ${
                     validationMsg.username ? "error" : ""
-                  }`} // Thay đổi class khi có lỗi
+                  }`}
                 />
                 {/* Hiển thị lỗi tên tài khoản */}
                 <div className="Validate-Notification">
@@ -169,7 +169,7 @@ const Login = ({ setUserName }) => {
                   // onKeyDown={handleKeyDown}
                   className={`form-control-dn ${
                     validationMsg.password ? "error" : ""
-                  }`} // Thay đổi class khi có lỗi
+                  }`}
                 />
 
                 <i
@@ -186,13 +186,12 @@ const Login = ({ setUserName }) => {
                   }
                   onClick={togglePasswordVisibility}
                 ></i>
-                {/* Hiển thị lỗi mật khẩu */}
+
                 <div className="Validate-Notification">
                   <p className="Validator">{validationMsg.password}</p>
                 </div>
               </div>
             </div>
-            {/* Hiển thị lỗi đăng nhập nếu có */}
             {error && <p style={{ color: "red" }}>{error}</p>}{" "}
             <div className="ButtonLogin">
               <button

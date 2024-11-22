@@ -26,16 +26,16 @@ const Contact = () => {
       !formData.phone.trim() ||
       !formData.message.trim()
     ) {
-      alert("Vui lòng nhập đầy đủ thông tin."); // Thông báo lỗi
+      alert("Vui lòng nhập đầy đủ thông tin.");
       return false;
     }
 
     if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      alert("Email không hợp lệ."); // Kiểm tra định dạng email
+      alert("Email không hợp lệ.");
       return false;
     }
 
-    return true; // Không có lỗi
+    return true;
   };
 
   const handleSubmit = (e) => {
