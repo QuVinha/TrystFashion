@@ -126,6 +126,10 @@ const HomePage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    if (!validateForm()) {
+      return; // Dừng nếu form không hợp lệ
+    }
+
     console.log("Form data submitted:", formData);
 
     emailjs
