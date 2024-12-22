@@ -1,0 +1,54 @@
+body,
+html {
+  font-family: "Roboto Condensed", sans-serif;
+}
+
+.TitleAccountUser {
+  margin-top: 22px;
+  padding: 17px 10px 17px 10px;
+  display: grid;
+  text-align: center;
+  grid-template-columns: 5% 20% 10% 25% 12% 16% 12%;
+  background-color: #eeeeee;
+}
+
+.UserItem {
+  padding: 0 10px 0 10px;
+  display: grid;
+  text-align: center;
+  grid-template-columns: 5% 20% 10% 25% 12% 16% 6% 6%;
+  border-bottom: 1px solid #cccccc;
+}
+
+.UserItem i {
+  cursor: pointer;
+}
+
+.IdUser,
+.DisableUser {
+  padding: 17px 0 17px 0;
+}
+
+.NameUser,
+.AccUser,
+.AddressUser,
+.BirthUser,
+.PhoneUser,
+.WatchUser,
+.EditProduct {
+  padding: 17px 0 17px 0;
+  border-right: 1px solid #cccccc;
+}
+
+.ButtonDeleteUser {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  padding-bottom: 20px;
+}
+
+.ButtonDeleteUser button {
+  padding: 10px;
+  cursor: pointer;
+}

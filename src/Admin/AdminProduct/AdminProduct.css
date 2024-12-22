@@ -1,0 +1,117 @@
+body,
+html {
+  font-family: "Roboto Condensed", sans-serif;
+}
+
+.TitleAdminProduct {
+  margin-top: 22px;
+  padding: 17px 10px 17px 10px;
+  display: grid;
+  text-align: center;
+  grid-template-columns: 3% 30% 15% 15% 25% 6% 6%;
+  background-color: #eeeeee;
+}
+
+.AdminRightProduct {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+  padding-left: 30px;
+}
+
+.AdminRightProduct h5 {
+  font-size: 23px;
+  font-weight: 500;
+}
+
+.ButtonAddPrd button {
+  margin-right: 20px;
+  font-size: 17px;
+  padding: 10px;
+  font-family: "Roboto Condensed", sans-serif;
+}
+
+.ButtonAddPrd button:hover {
+  cursor: pointer;
+}
+
+.ProductItem {
+  padding: 0 10px 0 10px;
+  display: grid;
+  text-align: center;
+  grid-template-columns: 3% 30% 15% 15% 25% 6% 6%;
+  border-bottom: 1px solid #cccccc;
+}
+
+.ProductItem i {
+  cursor: pointer;
+}
+
+.IDProduct,
+.DeleteProduct {
+  padding: 17px 0 17px 0;
+}
+
+.NameProduct,
+.PriceProduct,
+.QuantityProduct,
+.DesProduct,
+.CategoryProduct,
+.ImageProduct,
+.EditProduct {
+  padding: 17px 0 17px 0;
+  border-right: 1px solid #cccccc;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-50%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.delete-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.delete {
+  text-align: center;
+  background: white;
+  width: 400px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: slideDown 0.5s ease-out;
+}
+
+.delete p {
+  font-size: 18px;
+  padding-top: 50px;
+  padding-bottom: 20px;
+}
+
+.ButtonDeleteProduct {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  padding-bottom: 20px;
+}
+
+.ButtonDeleteProduct button {
+  padding: 10px;
+  cursor: pointer;
+}

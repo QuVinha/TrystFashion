@@ -1,0 +1,31 @@
+html {
+  font-family: "Roboto Condensed", sans-serif;
+}
+
+.AccountInfo {
+  padding: 50px 120px 0 50px;
+}
+
+.InfoUser {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 20px;
+}
+
+.InfoLabel {
+  width: 12%;
+}
+
+.InfoLabel label {
+  font-weight: 500;
+}
+
+.ButtonDisableUser {
+  padding-top: 15px;
+}
+
+.ButtonDisableUser button {
+  padding: 12px;
+  cursor: pointer;
+}

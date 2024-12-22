@@ -1,11 +1,25 @@
-// src/context/CartContext.js
-import React, { createContext, useState } from "react";
+import React, { createContext, useState, useEffect } from "react";
 
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
+  // State giỏ hàng
   const [cartItems, setCartItems] = useState([]);
 
+  // Lấy dữ liệu từ localStorage khi component được mount
+  useEffect(() => {
+    const storedCartItems = JSON.parse(localStorage.getItem("cartItems"));
+    if (storedCartItems) {
+      setCartItems(storedCartItems);
+    }
+  }, []);
+
+  // Lưu dữ liệu vào localStorage khi cartItems thay đổi
+  useEffect(() => {
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  }, [cartItems]);
+
+  // Thêm sản phẩm vào giỏ hàng
   const addToCart = (product) => {
     setCartItems((prevItems) => {
       const itemExists = prevItems.find((item) => item.id === product.id);
@@ -20,10 +34,12 @@ export const CartProvider = ({ children }) => {
     });
   };
 
+  // Xóa sản phẩm khỏi giỏ hàng
   const removeFromCart = (id) => {
     setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
   };
 
+  // Cập nhật số lượng sản phẩm
   const updateQuantity = (id, quantity) => {
     setCartItems((prevItems) =>
       prevItems.map((item) =>
@@ -32,6 +48,7 @@ export const CartProvider = ({ children }) => {
     );
   };
 
+  // Xóa toàn bộ giỏ hàng
   const clearCart = () => {
     setCartItems([]);
   };

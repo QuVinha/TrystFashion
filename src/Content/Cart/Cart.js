@@ -10,11 +10,14 @@ const Cart = () => {
   const { cartItems, removeFromCart, updateQuantity } = useContext(CartContext);
   const navigate = useNavigate();
 
-  const handleBuyNow = () => {
-    navigate("/pay");
-    window.scrollTo(0, 0);
+  const calculateTotalItems = () => {
+    return cartItems.reduce((total, item) => total + item.quantity, 0);
   };
 
+  const handleBuyNow = () => {
+    navigate("/pay", { state: { cartItems } });
+    window.scrollTo(0, 0);
+  };
   const handleBuyContinue = () => {
     navigate("/product");
     window.scrollTo(0, 0);
@@ -52,7 +55,7 @@ const Cart = () => {
             <p>GIỎ HÀNG</p>
           </div>
           <div className="CartTitle2">
-            <p>({cartItems.length} sản phẩm)</p>
+            <p>({calculateTotalItems()} sản phẩm)</p>
           </div>
         </div>
 
@@ -61,10 +64,13 @@ const Cart = () => {
             {cartItems.map((item) => (
               <div key={item.id} className="CartProduct">
                 <div className="CartProductImg">
-                  <img src={item.image} alt={item.title} />
+                  <img
+                    src={`data:image/jpeg;base64,${item.url}`}
+                    alt={item.name}
+                  />
                 </div>
                 <div className="CartProductName">
-                  <h5>{item.title}</h5>
+                  <h5>{item.name}</h5>
                   <p>Màu: {item.color || "N/A"}</p>
                   <p>Size: {item.size || "N/A"}</p>
                 </div>
@@ -82,7 +88,12 @@ const Cart = () => {
                     </button>
                   </div>
                 </div>
-                <button onClick={() => removeFromCart(item.id)}>Xóa</button>
+
+                <i
+                  style={{ cursor: "pointer" }}
+                  onClick={() => removeFromCart(item.id)}
+                  className="fa-solid fa-trash"
+                ></i>
               </div>
             ))}
           </div>
@@ -108,7 +119,9 @@ const Cart = () => {
               </div>
 
               <div className="buttonPayNow">
-                <button onClick={handleBuyNow}>THANH TOÁN NGAY</button>
+                <div className="buttonPayNow">
+                  <button onClick={handleBuyNow}>THANH TOÁN NGAY</button>
+                </div>
               </div>
               <div className="buttonShopping">
                 <button onClick={handleBuyContinue}>TIẾP TỤC MUA HÀNG</button>

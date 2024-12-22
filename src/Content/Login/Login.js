@@ -16,6 +16,7 @@ const Login = ({ setUserName }) => {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
 
   const onChangeUsername = (event) => {
     const value = event.target.value;
@@ -39,8 +40,8 @@ const Login = ({ setUserName }) => {
 
     if (isEmpty(password)) {
       msg.password = "Mật khẩu không được để trống !";
-    } else if (password.length < 6) {
-      msg.password = "Mật khẩu phải có ít nhất 8 kí tự!";
+    } else if (password.length < 4) {
+      msg.password = "Mật khẩu phải có ít nhất 5 kí tự!";
     }
 
     setValidationMsg(msg);
@@ -53,7 +54,7 @@ const Login = ({ setUserName }) => {
     if (!isValid) return;
 
     axios
-      .post("http://192.168.1.60:8080/api/v1/users/login", {
+      .post("http://192.168.10.226:8080/api/v1/users/login", {
         user_name: username,
         password: password,
       })
@@ -68,12 +69,23 @@ const Login = ({ setUserName }) => {
             const decodedToken = jwtDecode(token);
             console.log("Decoded Token:", decodedToken); // Log token đã giải mã
 
+            // Lưu token và các thông tin khác vào localStorage
             localStorage.setItem("token", token);
             localStorage.setItem("user_name", decodedToken.userName);
-            setUserName(decodedToken.userName);
-            navigate("/");
+            localStorage.setItem("full_name", decodedToken.fullName);
+            localStorage.setItem("phone_Number", decodedToken.phoneNumber);
+            localStorage.setItem(
+              "roleName",
+              decodedToken.roleName.toUpperCase()
+            );
 
-            fetchData(decodedToken);
+            setUserName(decodedToken.userName);
+            if (decodedToken.roleName.toUpperCase() === "ADMIN") {
+              navigate("/admin");
+              window.scrollTo(0, 0);
+            } else {
+              navigate("/");
+            }
           } catch (err) {
             console.error("Invalid token format:", err);
             setError("Đăng nhập thất bại, vui lòng thử lại sau.");
@@ -87,30 +99,6 @@ const Login = ({ setUserName }) => {
         console.error("Login error:", err);
         setError("Đăng nhập thất bại, vui lòng thử lại sau.");
       });
-  };
-
-  const fetchData = (decodedToken) => {
-    const token = localStorage.getItem("token");
-
-    if (token) {
-      axios
-        .get("http://192.168.1.24:8080/api/v1/users/data", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((response) => {
-          console.log("Data from API:", response.data);
-          // Cập nhật dữ liệu vào state
-          // setData(response.data); // Ví dụ: Lưu dữ liệu vào state
-        })
-        .catch((err) => {
-          console.error("Error fetching data:", err);
-          setError("Không thể tải dữ liệu. Vui lòng thử lại sau.");
-        });
-    } else {
-      setError("Token không hợp lệ hoặc không tìm thấy.");
-    }
   };
 
   return (

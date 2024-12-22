@@ -63,6 +63,8 @@ const Header = ({ username }) => {
   const handleLogout = () => {
     localStorage.removeItem("user_name");
     localStorage.removeItem("password");
+    localStorage.removeItem("token");
+    localStorage.removeItem("roleName");
     navigate("/login");
     window.scrollTo(0, 0);
   };

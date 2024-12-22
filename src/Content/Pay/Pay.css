@@ -349,3 +349,13 @@ textarea:focus {
   font-size: 18px;
   font-weight: 500;
 }
+
+input[type="radio"] {
+  -webkit-appearance: radio;
+  -moz-appearance: radio;
+  appearance: radio;
+}
+
+input[type="radio"]:checked {
+  background-color: #4caf50; /* Hoặc màu khác để làm nổi bật khi chọn */
+}

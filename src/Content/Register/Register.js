@@ -44,6 +44,11 @@ const Register = () => {
     setAddress(value);
   };
 
+  const onChangePhoneNumber = (event) => {
+    const value = event.target.value;
+    setPhone_number(value);
+  };
+
   const onChangeConfirmPassword = (event) => {
     const value = event.target.value;
     setConfirmPassword(value);
@@ -68,7 +73,7 @@ const Register = () => {
 
     if (isEmpty(user_name)) {
       msg.user_name = "Tên tài khoản không được để trống!";
-    } else if (user_name.length < 3 || user_name.length > 8) {
+    } else if (user_name.length < 3 || user_name.length > 10) {
       msg.user_name = "Tên tài khoản phải từ 3-8 kí tự!";
     } else if (!regex.test(user_name)) {
       msg.user_name = "Tên tài khoản chỉ chứa các ký tự chữ cái, chữ số!";
@@ -84,6 +89,18 @@ const Register = () => {
 
     if (password !== confirmPassword) {
       msg.confirmPassword = "Mật khẩu nhập lại không khớp!";
+    }
+
+    if (isEmpty(phone_number)) {
+      msg.phone_number = "Số điện thoại không được để trống!";
+    } else if (!/^\d+$/.test(phone_number)) {
+      msg.phone_number = "Số điện thoại chỉ được chứa chữ số!";
+    } else if (phone_number.length !== 10) {
+      msg.phone_number = "Số điện thoại phải có đúng 10 chữ số!";
+    } else if (/^(\d)\1{9}$/.test(phone_number)) {
+      msg.phone_number = "Số điện thoại không được chứa 10 chữ số giống nhau!";
+    } else if (!phone_number.startsWith("0")) {
+      msg.phone_number = "Số điện thoại phải bắt đầu bằng số 0!";
     }
 
     if (isEmpty(birthday)) {
@@ -104,12 +121,16 @@ const Register = () => {
       user_name: user_name,
       password: password,
       address: address,
-      birthday: birthday,
+      phone_number: phone_number,
+      date_of_birth: birthday, // date_of_birth instead of birthday
+      role_id: 1, // Set role_id to 1
+      facebook_account_id: 0, // Default to 0 as per the API spec
+      google_account_id: 0, // Default to 0 as per the API spec
     };
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/v1/users/register",
+        "http://192.168.10.226:8080/api/v1/users/register",
         userData
       );
       alert("Đăng ký thành công");
@@ -117,18 +138,8 @@ const Register = () => {
 
       console.log("Registration successful:", response.data);
     } catch (error) {
-      console.error("Registration failed:", error.response.data);
+      console.error("Registration failed:", error.response?.data || error);
     }
-
-    // Nếu hợp lệ, thực hiện các thao tác đăng ký khác
-    console.log("Thông tin đăng ký hợp lệ:", {
-      fullname,
-      user_name,
-      password,
-      birthday,
-      address,
-      role: 1,
-    });
   };
 
   return (
@@ -170,7 +181,7 @@ const Register = () => {
                   onChange={onChangeFullname}
                   className={`form-control-dn ${
                     validationMsg.fullname ? "error" : ""
-                  }`} // Thay đổi class khi có lỗi
+                  }`}
                 />
                 <div className="Validate-Notification">
                   <p className="Validator">{validationMsg.fullname}</p>
@@ -186,7 +197,7 @@ const Register = () => {
                   onChange={onChangeUsername}
                   className={`form-control-dn ${
                     validationMsg.user_name ? "error" : ""
-                  }`} // Thay đổi class khi có lỗi
+                  }`}
                 />
                 <div className="Validate-Notification">
                   <p className="Validator">{validationMsg.user_name}</p>
@@ -202,7 +213,7 @@ const Register = () => {
                   onChange={onChangePassword}
                   className={`form-control-dn ${
                     validationMsg.password ? "error" : ""
-                  }`} // Thay đổi class khi có lỗi
+                  }`}
                 />
 
                 <i
@@ -234,7 +245,7 @@ const Register = () => {
                   onChange={onChangeConfirmPassword}
                   className={`form-control-dn ${
                     validationMsg.confirmPassword ? "error" : ""
-                  }`} // Thay đổi class khi có lỗi
+                  }`}
                 />
 
                 <i
@@ -260,13 +271,29 @@ const Register = () => {
               <div className="NameAccountRegister">
                 <input
                   type="text"
+                  name="phone_number"
+                  placeholder="Số điện thoại"
+                  value={phone_number}
+                  onChange={onChangePhoneNumber}
+                  className={`form-control-dn ${
+                    validationMsg.phone_number ? "error" : ""
+                  }`}
+                />
+                <div className="Validate-Notification">
+                  <p className="Validator">{validationMsg.phone_number}</p>
+                </div>
+              </div>
+
+              <div className="NameAccountRegister">
+                <input
+                  type="text"
                   name="address"
                   placeholder="Địa chỉ"
                   value={address}
                   onChange={onChangeAddress}
                   className={`form-control-dn ${
                     validationMsg.address ? "error" : ""
-                  }`} // Thay đổi class khi có lỗi
+                  }`}
                 />
                 <div className="Validate-Notification">
                   <p className="Validator">{validationMsg.address}</p>
@@ -282,7 +309,7 @@ const Register = () => {
                   onChange={onChangeDate}
                   className={`form-control-dn ${
                     validationMsg.birthday ? "error" : ""
-                  }`} // Thay đổi class khi có lỗi
+                  }`}
                 />
                 <div className="Validate-Notification">
                   <p className="Validator">{validationMsg.birthday}</p>
@@ -301,7 +328,7 @@ const Register = () => {
                   cursor: "pointer",
                   fontSize: "16px",
                 }}
-                onClick={handleRegister} // Thực hiện đăng ký khi nhấn nút
+                onClick={handleRegister}
               >
                 ĐĂNG KÝ
               </button>

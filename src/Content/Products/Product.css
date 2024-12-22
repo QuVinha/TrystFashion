@@ -2,9 +2,6 @@ html {
   font-family: "Roboto Condensed", sans-serif;
 }
 
-.ProductPage {
-}
-
 .TitleProductPage {
   padding: 50px 60px 30px;
 }
@@ -17,8 +14,12 @@ html {
 }
 
 .SearchProduct {
-  padding: 15px 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 150px;
   margin-top: 25px;
+  gap: 20px;
 }
 
 .Search {
@@ -31,6 +32,18 @@ html {
   display: flex;
   gap: 15px;
   padding-left: 20px;
+}
+
+.DropdownAdmin {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  justify-content: center;
+}
+
+.IconEditDropdown i {
+  font-size: 20px;
+  cursor: pointer;
 }
 
 .Dropdown {
@@ -94,6 +107,24 @@ html {
 .DropdownContent ul li:hover {
   background-color: #000;
   color: white;
+}
+
+.IconAddProduct {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid;
+  color: #fff;
+  font-family: "Roboto Condensed", sans-serif;
+  cursor: pointer;
+  background-color: #000;
+  padding: 10px;
+}
+
+.IconAddProduct:hover {
+  color: #000;
+  background-color: #fff;
+  cursor: pointer;
 }
 
 .Product {
@@ -173,4 +204,148 @@ html {
   font-size: 15px;
   font-weight: 800;
   color: #d30000;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-50%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal */
+.modals {
+  background: white;
+  width: 800px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: slideDown 0.5s ease-out;
+}
+
+.modal-header {
+  position: relative;
+  background: linear-gradient(140deg, red, black);
+  height: 130px;
+  color: white;
+  font-size: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-close {
+  position: absolute;
+  color: #fff;
+  right: 0;
+  top: 0;
+  padding: 12px;
+  cursor: pointer;
+}
+
+.modal-close:hover {
+  background-color: #ccc;
+  color: #000;
+}
+
+.modal-header h2 {
+  margin: 0;
+}
+
+.modal-header i {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 20px;
+  color: white;
+  padding: 12px;
+  cursor: pointer;
+}
+
+.modal-header i:hover {
+  background-color: #fff;
+  color: #000;
+}
+
+.modal-header h5 {
+  letter-spacing: 2px;
+}
+
+.modal-body {
+  padding: 25px 60px;
+  text-align: left;
+}
+
+.modal-body input {
+  width: 100%;
+  padding: 16px 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+}
+
+.modal-footer {
+  padding: 0 60px 25px;
+  text-align: center;
+}
+
+.modal-footer button {
+  letter-spacing: 2px;
+  font-size: 16px;
+  font-weight: 400;
+  transition: transform 0.3s ease;
+  font-family: "Roboto Condensed", sans-serif;
+}
+
+.pay-btn {
+  width: 100%;
+  padding: 15px 20px;
+  background: linear-gradient(180deg, black, red);
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.pay-btn:hover {
+  background-color: #e91e63;
+  transform: scale(1.1);
+}
+
+.modal-body input:focus,
+textarea:focus {
+  border-color: #333333;
+  outline: none;
+}
+
+.image-preview {
+  margin-top: 20px;
+}
+
+.image-preview img {
+  max-width: 50%;
+  height: auto;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.modal-body-flex {
+  display: flex;
+  align-items: center;
+  line-height: center;
+  gap: 20px;
 }

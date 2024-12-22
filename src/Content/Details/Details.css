@@ -323,6 +323,10 @@ html {
   line-height: 25px;
 }
 
+.productDetailsSContent {
+  line-height: 30px;
+}
+
 .tabDetails .active {
   background: #000;
 }

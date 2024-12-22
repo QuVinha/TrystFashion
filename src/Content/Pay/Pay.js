@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import "./Pay.css";
@@ -19,6 +20,40 @@ const Pay = () => {
   const [selectedCity, setSelectedCity] = useState(null);
   const [selectedDistrict, setSelectedDistrict] = useState(null);
   const [selectedWard, setSelectedWard] = useState(null);
+  const [products1, setProducts1] = useState(null);
+  const location = useLocation();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [shippingMethod, setShippingMethod] = useState("saving");
+  const [shippingCost, setShippingCost] = useState(25000);
+  const { productId, cartItems = [] } = location.state || {};
+
+  useEffect(() => {
+    if (productId) {
+      fetch(`http://172.17.68.220:8080/api/v1/products/${productId}`)
+        .then((res) => {
+          if (!res.ok) throw new Error("Failed to fetch product data");
+          return res.json();
+        })
+        .then((data) => {
+          console.log("Received data:", data);
+          if (data) {
+            setProducts1(data);
+          } else {
+            setError("Không có dữ liệu sản phẩm");
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching products:", error);
+          setError("Lỗi khi tải dữ liệu");
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } else {
+      setLoading(false);
+    }
+  }, [productId]);
 
   useEffect(() => {
     axios
@@ -35,6 +70,34 @@ const Pay = () => {
       })
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
+
+  const calculateTotalItems = () => {
+    return cartItems.length
+      ? cartItems.reduce((total, item) => total + item.quantity, 0)
+      : 1; // Nếu không có cartItems, giả định là 1 sản phẩm
+  };
+
+  const handleShippingChange = (event) => {
+    const selectedMethod = event.target.value;
+    setShippingMethod(selectedMethod); // Cập nhật giá trị 'saving' hoặc 'fast'
+
+    if (selectedMethod === "saving") {
+      setShippingCost(25000); // Phí vận chuyển tiết kiệm
+    } else if (selectedMethod === "fast") {
+      setShippingCost(35000); // Phí vận chuyển nhanh
+    }
+  };
+
+  // Tính tổng giá trị sản phẩm trong giỏ hàng (totalPrice)
+  const totalPrice = cartItems.length
+    ? cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)
+    : products1
+    ? products1.price
+    : 0;
+
+  // Trả về giao diện trong trường hợp đang tải hoặc có lỗi
+  if (loading) return <p>Đang tải dữ liệu...</p>;
+  if (error) return <p>{error}</p>;
 
   const handleCityChange = (selectedOption) => {
     setSelectedCity(selectedOption);
@@ -159,7 +222,8 @@ const Pay = () => {
                   id="saving-shipping"
                   name="shipping"
                   value="saving"
-                  defaultChecked
+                  checked={shippingMethod === "saving"}
+                  onChange={handleShippingChange}
                 />
                 <label htmlFor="saving-shipping" className="flex1-label">
                   <div className="label-text">Vận chuyển tiết kiệm</div>
@@ -174,6 +238,8 @@ const Pay = () => {
                   id="fast-shipping"
                   name="shipping"
                   value="fast"
+                  checked={shippingMethod === "fast"}
+                  onChange={handleShippingChange}
                 />
                 <label htmlFor="fast-shipping" className="flex1-label">
                   <div className="label-text">Vận chuyển nhanh</div>
@@ -272,38 +338,54 @@ const Pay = () => {
 
           <div className="PayContentRight">
             <div className="PayContentRightTitle">
-              <p>Đơn hàng (2 sản phẩm)</p>
+              <p>Đơn hàng ({calculateTotalItems()} sản phẩm)</p>
             </div>
 
-            <div className="PayProduct">
-              <div className="ProductPay">
-                <div className="ProductPayImg">
-                  <img src={AoJersey2} alt="" />
-                </div>
-                <div className="ProductPayName">
-                  <h5>Áo Jersey Dài Tay Long Sleeve MERSHIER 6398</h5>
-                  <p>Size M</p>
-                  <p>Màu đỏ</p>
-                </div>
-                <div className="ProductPayPrice">
-                  <p>410.000đ</p>
+            {products1 && (
+              <div className="PayProduct">
+                <div className="ProductPay">
+                  <div className="ProductPayImg">
+                    <img
+                      src={`data:image/jpeg;base64,${products1?.url}`}
+                      alt={products1?.name}
+                    />
+                  </div>
+                  <div className="ProductPayName">
+                    <h5>{products1?.name}</h5>
+                  </div>
+                  <div className="ProductPayPrice">
+                    <p>
+                      {Math.floor(products1?.price).toLocaleString("vi-VN")}đ
+                    </p>
+                  </div>
                 </div>
               </div>
+            )}
 
-              <div className="ProductPay">
-                <div className="ProductPayImg">
-                  <img src={FeatProducts1} alt="" />
+            {cartItems &&
+              cartItems.map((product) => (
+                <div className="PayProduct" key={product.id}>
+                  <div className="ProductPay">
+                    <div className="ProductPayImg">
+                      <img
+                        src={`data:image/jpeg;base64,${product.url}`} // Sử dụng ảnh đúng của sản phẩm
+                        alt={product.name}
+                      />
+                    </div>
+                    <div className="ProductPayName">
+                      <h5>{product.name}</h5>
+                      {/* <p>Size M</p>
+                      <p>Màu đỏ</p> */}
+                      <p>Số lượng: {product.quantity}</p>
+                    </div>
+                    <div className="ProductPayPrice">
+                      <p>
+                        {Math.floor(product.price).toLocaleString("vi-VN")}đ
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <div className="ProductPayName">
-                  <h5>Áo Phông EVOLVEMENT 26159</h5>
-                  <p>Size L</p>
-                  <p>Màu đỏ</p>
-                </div>
-                <div className="ProductPayPrice">
-                  <p>390.000đ</p>
-                </div>
-              </div>
-            </div>
+              ))}
 
             <div className="PayContentRightDiscount">
               <div className="InputDiscount">
@@ -317,19 +399,30 @@ const Pay = () => {
             <div className="EstimatePrice">
               <div className="EstimatePriceContent">
                 <div className="EstimatePriceContent1">Tạm tính</div>
-                <div className="EstimatePriceContent2">612.000đ</div>
+                <div className="EstimatePriceContent2">
+                  {Math.floor(totalPrice).toLocaleString("vi-VN")}đ
+                </div>
               </div>
 
               <div className="EstimatePriceContent">
                 <div className="EstimatePriceContent1">Phí vận chuyển</div>
-                <div className="EstimatePriceContent2">25.000đ</div>
+                <div className="EstimatePriceContent2">
+                  {shippingCost > 0
+                    ? Math.floor(shippingCost).toLocaleString("vi-VN") + "đ"
+                    : "Chưa chọn phương thức"}
+                </div>
               </div>
             </div>
 
             <div className="TotalAmount">
               <div className="TotalAmountContent">
                 <div className="TotalAmountContent1">Tổng cộng</div>
-                <div className="TotalAmountContent2">637.000đ</div>
+                <div className="TotalAmountContent2">
+                  {Math.floor(totalPrice + shippingCost).toLocaleString(
+                    "vi-VN"
+                  )}
+                  đ
+                </div>
               </div>
             </div>
 

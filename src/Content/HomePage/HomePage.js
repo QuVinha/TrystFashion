@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import "./HomePage.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import Header from "../Header/Header";
@@ -22,6 +22,7 @@ import FeatProducts2 from "../../../src/assets/img/featProducts/featPrd2.jpg";
 import FeatProducts3 from "../../../src/assets/img/featProducts/featPrd3.jpg";
 import FeatProducts4 from "../../../src/assets/img/featProducts/featPrd4.jpg";
 import vidHome from "../../../src/assets/img/VideoHome.mp4";
+import { CartContext } from "../CartContext/CartContext";
 
 const HomePage = () => {
   const [count, setCount] = useState(1);
@@ -29,14 +30,25 @@ const HomePage = () => {
   const [selectedSize, setSelectedSize] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const [products, setProducts] = useState([]);
+  const [products1, setProducts1] = useState(null);
+  const [products2, setProducts2] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { addToCart } = useContext(CartContext);
 
   const handleDetails = () => {
     navigate("/details");
     window.scrollTo(0, 0);
   };
 
-  const handleBuyNow = () => {
-    navigate("/pay");
+  const handleBuyNow = (productId) => {
+    navigate("/pay", { state: { productId } });
+    window.scrollTo(0, 0);
+  };
+
+  const handleNavigatePay = (id) => {
+    navigate("/pay", { state: { id } });
     window.scrollTo(0, 0);
   };
 
@@ -164,6 +176,73 @@ const HomePage = () => {
 
   const images = [Thy, Thy1, Thy2];
 
+  useEffect(() => {
+    fetch("http://192.168.10.226:8080/api/v1/products/6")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Received data:", data);
+        if (data) {
+          setProducts1(data);
+        } else {
+          setError("Không có dữ liệu sản phẩm");
+        }
+      })
+      .catch((error) => {
+        console.log("Error fetching products:", error);
+        setError("Lỗi khi tải dữ liệu");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetch("http://192.168.10.226:8080/api/v1/products/17")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Received data:", data);
+        if (data) {
+          setProducts2(data);
+        } else {
+          setError("Không có dữ liệu sản phẩm");
+        }
+      })
+      .catch((error) => {
+        console.log("Error fetching products:", error);
+        setError("Lỗi khi tải dữ liệu");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetch("http://192.168.10.226:8080/api/v1/products")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Dữ liệu nhận được:", data);
+        if (Array.isArray(data)) {
+          setProducts(data);
+        } else if (data.products) {
+          setProducts(data.products);
+        } else {
+          setError("Không có dữ liệu sản phẩm");
+        }
+      })
+      .catch((error) => {
+        console.log("Lỗi khi tải sản phẩm:", error);
+        setError("Lỗi khi tải dữ liệu");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  const handleNavigate = (id) => {
+    navigate("/details", { state: { id } });
+    window.scrollTo(0, 0);
+  };
+
   return (
     <div id="main">
       <Header />
@@ -264,21 +343,27 @@ const HomePage = () => {
                 </div>
                 <div className="productWC5">
                   <div className="productWC5Img">
-                    <img src={AoJacket} alt="" />
+                    <img
+                      src={`data:image/jpeg;base64,${products1?.url}`}
+                      alt={products1?.name}
+                    />
                     <div className="iconOverlay2">
                       <i
-                        onClick={handleDetails}
+                        onClick={() => handleNavigate(products1?.id)}
                         class="fa-solid fa-magnifying-glass"
                       ></i>
                       <i className="fas fa-heart"></i>
-                      <i className="fas fa-shopping-cart"></i>
+                      <i
+                        onClick={() => handleNavigatePay(products1?.id)}
+                        className="fas fa-shopping-cart"
+                      ></i>
                     </div>
                   </div>
                   <div className="productWC5Content">
-                    <p className="productWC5name">
-                      Áo Khoác Kẻ Sọc Form Boxy BLACK WORK 71003
+                    <p className="productWC5name">{products1?.name}</p>
+                    <p className="productWC5price">
+                      {Math.floor(products1?.price).toLocaleString("vi-VN")}đ
                     </p>
-                    <p className="productWC5price">820.000đ</p>
 
                     <div className="productWC5size">
                       <div className="productWC5size1">
@@ -347,8 +432,19 @@ const HomePage = () => {
 
                     <div className="productWC5Buy">
                       <div className="productWC5BtnBuy">
-                        <button className="btnAdd">Thêm Vào Giỏ Hàng</button>
-                        <button onClick={handleBuyNow} className="btnBuy">
+                        <button
+                          onClick={() => {
+                            addToCart(products1);
+                            alert("Thêm giỏ hàng thành công!");
+                          }}
+                          className="btnAdd"
+                        >
+                          Thêm Vào Giỏ Hàng
+                        </button>
+                        <button
+                          onClick={() => handleBuyNow(products1.id)}
+                          className="btnBuy"
+                        >
                           Mua Ngay
                         </button>
                       </div>
@@ -420,7 +516,7 @@ const HomePage = () => {
                 </div>
                 <div className="prodPSContentButton">
                   <div className="ButtonprodPS">
-                    <button onClick={handleDetails}>
+                    <button onClick={() => handleNavigate(products2?.id)}>
                       Xem sản phẩm
                       <div>
                         <i class="fa-solid fa-chevron-right"></i>

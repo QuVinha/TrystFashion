@@ -1,0 +1,92 @@
+body,
+html {
+  font-family: "Roboto Condensed", sans-serif;
+}
+
+.TitleAdminCategory {
+  margin-top: 22px;
+  padding: 17px 10px 17px 10px;
+  display: grid;
+  grid-template-columns: 5% 85% 5% 5%;
+  background-color: #eeeeee;
+}
+
+.AdminRightCategory {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+  padding-left: 30px;
+}
+
+.AdminRightCategory h5 {
+  font-size: 23px;
+  font-weight: 500;
+}
+
+.ButtonAddCate button {
+  margin-right: 20px;
+  font-size: 17px;
+  padding: 10px;
+  font-family: "Roboto Condensed", sans-serif;
+}
+
+.ButtonAddCate button:hover {
+  cursor: pointer;
+}
+
+.AdminCategory {
+  padding-left: 10px;
+}
+
+.AdminCategory1,
+.AdminCategory2,
+.AdminCategory3 {
+  text-align: center;
+}
+
+.CategoryItem {
+  padding: 0 10px 0 10px;
+  display: grid;
+  grid-template-columns: 5% 85% 5% 5%;
+  border-bottom: 1px solid #cccccc;
+}
+
+.CategoryItem i {
+  cursor: pointer;
+}
+
+.IdCategory,
+.DeleteCategory {
+  text-align: center;
+  padding: 17px 0 17px 0;
+}
+
+.EditCategory,
+.DeleteCategory {
+  cursor: pointer;
+  text-align: center;
+}
+
+.NameCategory {
+  margin-left: 10px;
+}
+
+.NameCategory,
+.EditCategory {
+  padding: 17px 0 17px 0;
+  border-right: 1px solid #cccccc;
+}
+
+.ButtonDeleteCategory {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  padding-bottom: 20px;
+}
+
+.ButtonDeleteCategory button {
+  padding: 10px;
+  cursor: pointer;
+}

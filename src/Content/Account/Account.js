@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import "./Account.css";
@@ -12,6 +12,15 @@ const Account = () => {
     address: "",
     email: "",
   });
+
+  const [fullName, setFullName] = useState("");
+
+  useEffect(() => {
+    const storedFullName = localStorage.getItem("full_name");
+    if (storedFullName) {
+      setFullName(storedFullName); // Lưu vào state để sử dụng
+    }
+  }, []);
 
   const handleChange = (e) => {
     setProfile({ ...profile, [e.target.name]: e.target.value });
@@ -74,7 +83,7 @@ const Account = () => {
                     onChange={handleChange}
                   />
                 ) : (
-                  <p>{profile.name || "Chưa nhập tên"}</p>
+                  <p>{fullName || "Chưa nhập tên"}</p>
                 )}
               </div>
             </div>

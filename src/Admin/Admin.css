@@ -1,0 +1,183 @@
+body,
+html {
+  font-family: "Roboto Condensed", sans-serif;
+}
+
+.HeaderAdmin {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(180deg, #333333, #dd1818);
+}
+
+.LogoShopAdmin {
+  width: 20%;
+  text-align: center;
+}
+
+.LogoShopAdmin h1 {
+  font-family: "Roboto Condensed", sans-serif;
+  font-size: 45px;
+  color: #fff;
+  cursor: pointer;
+  padding-left: 20px;
+}
+
+.LogOutAdmin {
+  padding-right: 20px;
+}
+
+.IconLogoutAdmin {
+  padding: 10px;
+  border: 1px solid #fff;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.IconLogoutAdmin:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.IconLogoutAdmin i {
+  color: #fff;
+  font-size: 20px;
+}
+
+.AdminPage {
+  display: flex;
+  height: 290vh;
+}
+
+.AdminPageLeft {
+  width: 20%;
+
+  padding-top: 20px;
+  background-color: #333;
+}
+
+.AdminPageRight {
+  width: 80%;
+}
+
+.AdminLeftTitle {
+  padding-left: 30px;
+  padding-bottom: 20px;
+}
+
+.AdminLeftTitle h5 {
+  color: #fff;
+  font-size: 23px;
+  font-weight: 500;
+}
+
+.AdminMenuHeader {
+  background-color: #222222;
+}
+
+.AdminMenuHeader p {
+  color: #666666;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 18px 30px;
+}
+
+.NavAdminMenu1,
+.NavAdminMenu2,
+.NavAdminMenu3,
+.NavAdminMenu4 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-left: 30px;
+}
+
+.NavAdminMenu1:hover,
+.NavAdminMenu2:hover,
+.NavAdminMenu3:hover,
+.NavAdminMenu4:hover {
+  cursor: pointer;
+  background-color: #444444;
+}
+
+.AdminMenu a {
+  color: #fff;
+  padding: 25px 0;
+}
+
+.AdminMenu i {
+  color: #fff;
+}
+
+.AdminRightTitle {
+  padding-top: 20px;
+  padding-left: 30px;
+}
+
+.AdminRightTitle h5 {
+  font-size: 23px;
+  font-weight: 500;
+}
+
+.AdminRightContent {
+  display: flex;
+  align-items: center;
+  padding: 20px 10px 0;
+  gap: 25px;
+}
+
+.SectionDashboard {
+  width: 50%;
+}
+
+.SectionDashboard i,
+.SectionDashboard p {
+  font-size: 19px;
+  color: #fff;
+}
+
+.SectionLink1,
+.SectionLink2,
+.SectionLink3,
+.SectionLink4 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 5px;
+  transition: transform 0.3s ease;
+}
+
+.SectionLink1,
+.SectionLink4 {
+  margin-left: 40px;
+  padding: 15px 15px 75px;
+}
+
+.SectionLink3,
+.SectionLink2 {
+  margin-right: 40px;
+  padding: 15px 15px 75px;
+}
+
+.SectionLink1 {
+  background-color: #f39c12;
+}
+
+.SectionLink2 {
+  background-color: #00a65a;
+}
+
+.SectionLink3 {
+  background-color: #8e44ad;
+}
+
+.SectionLink4 {
+  background-color: #b81752;
+}
+
+.SectionLink1:hover,
+.SectionLink2:hover,
+.SectionLink3:hover,
+.SectionLink4:hover {
+  cursor: pointer;
+  transform: scale(1.04);
+}

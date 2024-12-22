@@ -1,14 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import "./Details.css";
 import { useNavigate, useLocation } from "react-router-dom";
-import BGR5 from "../../../src/assets/img/BGHomepage/5.jpg";
-import AoJersey from "../../../src/assets/img/featProducts/1.png";
-import AoJersey2 from "../../../src/assets/img/featProducts/2.png";
-import AoJersey3 from "../../../src/assets/img/featProducts/3.png";
-import AoJersey4 from "../../../src/assets/img/featProducts/4.png";
-import AoJersey5 from "../../../src/assets/img/featProducts/5.png";
+import { CartContext } from "../CartContext/CartContext";
 
 const Details = () => {
   const navigate = useNavigate();
@@ -18,6 +13,14 @@ const Details = () => {
   const [selectedSize, setSelectedSize] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [activeTab, setActiveTab] = useState("description");
+  const { id } = location.state || {};
+  const [products1, setProducts1] = useState(null);
+  const [products2, setProducts2] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [productImages, setProductImages] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const { addToCart } = useContext(CartContext);
 
   const handleTabClick = (tabName) => {
     setActiveTab(tabName);
@@ -60,7 +63,8 @@ const Details = () => {
     }
 
     if (isValid) {
-      alert("Thêm vào giỏ hàng thành công!");
+      addToCart(products1);
+      alert("Thêm giỏ hàng thành công!");
     }
   };
 
@@ -84,17 +88,52 @@ const Details = () => {
     }
   };
 
-  const [mainImage, setMainImage] = useState(AoJersey);
-  const productImages = [
-    { src: AoJersey, alt: "Áo Jersey" },
-    { src: AoJersey2, alt: "Áo Jersey2" },
-    { src: AoJersey3, alt: "Áo Jersey3" },
-    { src: AoJersey4, alt: "Áo Jersey4" },
-    { src: AoJersey5, alt: "Áo Jersey5" },
-  ];
+  useEffect(() => {
+    if (id) {
+      fetch(`http://192.168.10.226:8080/api/v1/products/${id}`)
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("Received data:", data);
+          if (data) {
+            setProducts1(data);
+          } else {
+            setError("Không có dữ liệu sản phẩm");
+          }
+        })
+        .catch((error) => {
+          console.log("Error fetching products:", error);
+          setError("Lỗi khi tải dữ liệu");
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  }, [id]);
 
-  const handleImageClick = (imageSrc) => {
-    setMainImage(imageSrc);
+  useEffect(() => {
+    if (id) {
+      fetch(`http://192.168.10.226:8080/api/v1/products/images/${id}`)
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("Received data:", data);
+          if (data) {
+            setProducts2(data);
+          } else {
+            setError("Không có dữ liệu sản phẩm");
+          }
+        })
+        .catch((error) => {
+          console.log("Error fetching products:", error);
+          setError("Lỗi khi tải dữ liệu");
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  }, [id]);
+
+  const handleThumbnailClick = (imageData) => {
+    setSelectedImage(imageData);
   };
 
   return (
@@ -103,10 +142,6 @@ const Details = () => {
       <div className="Details">
         <div
           style={{
-            // backgroundImage: `url(${BGR5})`,
-            // backgroundSize: "cover",
-            // backgroundPosition: "100% 30%",
-            // position: "relative",
             backgroundColor: "#000",
             width: "100%",
             height: "10vh",
@@ -118,24 +153,38 @@ const Details = () => {
         <div className="productDetails">
           <div className="ImgProductDetails">
             <div className="productDetailsImg">
-              <img src={mainImage} alt="Hình ảnh chính của sản phẩm" />
+              {selectedImage ? (
+                <img
+                  src={`data:image/png;base64,${selectedImage}`}
+                  alt={products1?.name}
+                />
+              ) : products2 && products2.length > 0 ? (
+                <img
+                  src={`data:image/png;base64,${products2[0]}`}
+                  alt={products1?.name}
+                />
+              ) : (
+                <p>Không có hình ảnh sản phẩm</p>
+              )}
             </div>
             <div className="productThumbnails">
-              {productImages.map((image, index) => (
-                <img
-                  key={index}
-                  src={image.src}
-                  alt={image.alt}
-                  className="thumbnailImage"
-                  onClick={() => handleImageClick(image.src)}
-                />
-              ))}
+              {products2 && products2.length > 0 ? (
+                products2.map((imageData, index) => (
+                  <img
+                    key={index}
+                    src={`data:image/png;base64,${imageData}`}
+                    alt={`Thumbnail ${index + 1}`}
+                    className="thumbnailImage"
+                    onClick={() => handleThumbnailClick(imageData)}
+                  />
+                ))
+              ) : (
+                <p>Không có hình ảnh thumbnail</p>
+              )}
             </div>
           </div>
           <div className="productDetailsContent">
-            <p className="productDetailsName">
-              Áo Khoác Kẻ Sọc Form Boxy BLACK WORK 71003
-            </p>
+            <p className="productDetailsName">{products1?.name}</p>
 
             <div className="productDetailsTrademark">
               <div className="productDetailsTrademark1">
@@ -151,18 +200,20 @@ const Details = () => {
                 <p>Mã SP: </p>
               </div>
               <div className="productDetailsTrademark2">
-                <p>BLACKWORK71003</p>
+                <p>{products1?.code}</p>
               </div>
             </div>
 
-            <p className="productDetailsPrice">820.000đ</p>
+            <p className="productDetailsPrice">
+              {Math.floor(products1?.price).toLocaleString("vi-VN")}đ
+            </p>
 
             <div className="productDetailsInventory">
               <div className="productDetailsInventory1">
                 <p>Tình trạng:</p>
               </div>
               <div className="productDetailsInventory2">
-                <p>Còn hàng</p>
+                <p>Hiện còn {products1?.quantity} sản phẩm</p>
               </div>
             </div>
 
@@ -286,26 +337,7 @@ const Details = () => {
           {/* Nội dung của từng tab */}
           {activeTab === "description" && (
             <div className="productDetailsSContent">
-              <p>Boxy BLACK WORK 71003</p>
-              <p>
-                * Màu sắc: Trắng, đen (do màn hình và điều kiện ánh sáng khác
-                nhau, màu sắc thực tế của sản phẩm có thể chênh lệch khoảng 5 -
-                10%) [ Nếu bạn cần tư vấn kỹ hơn về sản phẩm, cách mix-match hãy
-                chat trực tiếp với team TRYST nhé! ]
-              </p>
-              <p>
-                * Hướng dẫn cách giặt sản phẩm: - Hãy giặt sản phẩm bằng nước
-                lạnh, lộn trái khi trước khi giặt [ Khuyến khích sử dụng túi
-                giặt ] - Không sử dụng các loại bột/nước giặt có hàm lượng chất
-                tẩy cao - Khuyến khích sử dụng các loại nước xả giữ màu và làm
-                mềm vải - Hạn chế là/ủi trực tiếp lên hình in/ thêu của sản
-                phẩm. * Hỗ trợ đổi hàng theo quy định của Shopee: - Team TRYST
-                chỉ chấp nhận đổi sản phẩm nếu có lỗi từ nhà sản xuất, đổi size
-                nếu còn hàng trong kho - Vui lòng xem kỹ thông tin sản phẩm
-                trước khi đặt mua; mọi trường hợp lý do không thích, không hợp,
-                chúng mình xin phép không đổi/ trả hàng - Sản phẩm đổi còn đủ
-                tag mác của TRYST, chưa qua sử dụng hoặc giặt sấy.
-              </p>
+              {products1?.description}
             </div>
           )}
 

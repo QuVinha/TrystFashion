@@ -13,6 +13,16 @@ import Contact from "./Content/Contact/Contact";
 import Account from "./Content/Account/Account";
 import ChangePassWord from "./Content/ChangePassword/ChangePassWord";
 import Pay from "./Content/Pay/Pay";
+import Admin from "./Admin/Admin";
+import AccountUser from "./Admin/AdminAccount/AccountUser";
+import AdminOrder from "./Admin/AdminOrder/AdminOrder";
+import AdminProduct from "./Admin/AdminProduct/AdminProduct";
+import AdminCategory from "./Admin/AdminCategory/AdminCategory";
+import AddProduct from "./Admin/AddProduct/AddProduct";
+import AddCategory from "./Admin/AddCategory/AddCategory";
+import EditProduct from "./Admin/EditProduct/EditProduct";
+import EditCategory from "./Admin/EditCategory/EditCategory";
+import InfoAccount from "./Admin/InfoAccount/InfoAccount";
 
 function App() {
   const [username, setUserName] = useState("");
@@ -38,6 +48,40 @@ function App() {
         <Route path="/contact" element={<Contact user_name={username} />} />
         <Route path="/cart" element={<Cart user_name={username} />} />
         <Route path="/pay" element={<Pay user_name={username} />} />
+        <Route path="/admin" element={<Admin user_name={username} />} />
+        <Route
+          path="/accountUser"
+          element={<AccountUser user_name={username} />}
+        />
+        <Route path="/infoAccount/:userId" element={<InfoAccount />} />
+        <Route
+          path="/adminOrder"
+          element={<AdminOrder user_name={username} />}
+        />
+        <Route
+          path="/adminProduct"
+          element={<AdminProduct user_name={username} />}
+        />
+        <Route
+          path="/adminCategory"
+          element={<AdminCategory user_name={username} />}
+        />
+        <Route
+          path="/addProduct"
+          element={<AddProduct user_name={username} />}
+        />
+        <Route
+          path="/editProduct"
+          element={<EditProduct user_name={username} />}
+        />
+        <Route
+          path="/addCategory"
+          element={<AddCategory user_name={username} />}
+        />
+        <Route
+          path="/editCategory"
+          element={<EditCategory user_name={username} />}
+        />
       </Routes>
     </>
   );
