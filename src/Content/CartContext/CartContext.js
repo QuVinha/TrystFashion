@@ -1,36 +1,54 @@
+// src/context/CartContext/CartContext.js
 import React, { createContext, useState, useEffect } from "react";
 
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-  // State giỏ hàng
   const [cartItems, setCartItems] = useState([]);
+  const token = localStorage.getItem("token");
 
-  // Lấy dữ liệu từ localStorage khi component được mount
   useEffect(() => {
-    const storedCartItems = JSON.parse(localStorage.getItem("cartItems"));
-    if (storedCartItems) {
-      setCartItems(storedCartItems);
+    // Kiểm tra nếu có token (người dùng đã đăng nhập)
+    if (token) {
+      const storedCartItems = JSON.parse(
+        localStorage.getItem(`cartItems_${token}`)
+      );
+      if (storedCartItems) {
+        setCartItems(storedCartItems);
+      }
+    } else {
+      // Nếu không có token, làm trống giỏ hàng
+      setCartItems([]);
     }
-  }, []);
+  }, [token]);
 
-  // Lưu dữ liệu vào localStorage khi cartItems thay đổi
+  // Lưu giỏ hàng vào localStorage khi cartItems thay đổi
   useEffect(() => {
-    localStorage.setItem("cartItems", JSON.stringify(cartItems));
-  }, [cartItems]);
+    if (token) {
+      // Lưu giỏ hàng vào localStorage với khóa riêng biệt cho từng tài khoản
+      localStorage.setItem(`cartItems_${token}`, JSON.stringify(cartItems));
+    }
+  }, [cartItems, token]);
 
   // Thêm sản phẩm vào giỏ hàng
   const addToCart = (product) => {
     setCartItems((prevItems) => {
-      const itemExists = prevItems.find((item) => item.id === product.id);
+      const itemExists = prevItems.find(
+        (item) =>
+          item.id === product.id &&
+          item.size === product.size &&
+          item.color === product.color
+      );
       if (itemExists) {
         return prevItems.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
+          item.id === product.id &&
+          item.size === product.size &&
+          item.color === product.color
+            ? { ...item, quantity: item.quantity + product.quantity }
             : item
         );
       }
-      return [...prevItems, { ...product, quantity: 1 }];
+      return [...prevItems, { ...product }];
     });
   };
 
@@ -51,6 +69,10 @@ export const CartProvider = ({ children }) => {
   // Xóa toàn bộ giỏ hàng
   const clearCart = () => {
     setCartItems([]);
+    if (token) {
+      // Nếu có token, xóa giỏ hàng khỏi localStorage khi đăng xuất
+      localStorage.removeItem(`cartItems_${token}`);
+    }
   };
 
   return (

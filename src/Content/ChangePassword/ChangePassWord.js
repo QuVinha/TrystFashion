@@ -2,8 +2,60 @@ import React, { useState } from "react";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import "./ChangePassWord.css";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const ChangePassWord = () => {
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("user_id");
+  const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
+
+  // Hàm xử lý thay đổi mật khẩu
+  const handleChangePassword = () => {
+    // Kiểm tra mật khẩu mới và xác nhận mật khẩu mới
+    if (newPassword !== confirmPassword) {
+      setErrorMessage("Mật khẩu xác nhận không đúng. Vui lòng nhập lại.");
+      return;
+    }
+
+    setErrorMessage(""); // Xóa thông báo lỗi nếu mật khẩu đúng
+
+    // Gửi yêu cầu PUT để thay đổi mật khẩu
+    setIsLoading(true);
+    axios
+      .put(
+        `http://192.168.10.164:8080/api/v1/users/details/${userId}`,
+        {
+          password: newPassword,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Password updated successfully", response.data);
+        alert("Đổi mật khẩu thành công!");
+        setIsLoading(false);
+        navigate("/account"); // Chuyển hướng đến trang tài khoản
+      })
+      .catch((error) => {
+        console.error("Error changing password:", error);
+        alert("Đổi mật khẩu không thành công. Vui lòng thử lại.");
+        setIsLoading(false);
+      });
+  };
+
   return (
     <div id="main">
       <Header />
@@ -40,22 +92,43 @@ const ChangePassWord = () => {
 
           <div className="PassWordRightContent">
             <div className="InputPassWord">
-              <p>MẬT KHẨU CŨ*</p>
-              <input type="text" placeholder="Mật khẩu cũ" />
-            </div>
-
-            <div className="InputPassWord">
               <p>MẬT KHẨU MỚI*</p>
-              <input type="text" placeholder="Mật khẩu mới" />
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Mật khẩu mới"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+              <i
+                className={
+                  showPassword ? "fa-regular fa-eye" : "fa-regular fa-eye-slash"
+                }
+                onClick={togglePasswordVisibility}
+              ></i>
             </div>
 
             <div className="InputPassWord">
               <p>XÁC NHẬN MẬT KHẨU MỚI*</p>
-              <input type="text" placeholder="Xác nhận mật khẩu mới" />
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Xác nhận mật khẩu mới"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+              <i
+                className={
+                  showPassword ? "fa-regular fa-eye" : "fa-regular fa-eye-slash"
+                }
+                onClick={togglePasswordVisibility}
+              ></i>
             </div>
 
+            {errorMessage && <p className="error-message">{errorMessage}</p>}
+
             <div className="ButtonPassWord">
-              <button>ĐẶT LẠI MẬT KHẨU </button>
+              <button onClick={handleChangePassword} disabled={isLoading}>
+                {isLoading ? "Đang xử lý..." : "ĐẶT LẠI MẬT KHẨU"}
+              </button>
             </div>
           </div>
         </div>

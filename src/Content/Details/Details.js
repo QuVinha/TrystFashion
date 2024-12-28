@@ -39,7 +39,7 @@ const Details = () => {
   };
 
   const handleColorClick = (color) => {
-    setSelectedColor((prevColor) => (prevColor === color ? null : color));
+    setSelectedColor(color);
     setErrorMessage("");
   };
 
@@ -51,6 +51,7 @@ const Details = () => {
   const handleAddToCart = () => {
     let isValid = true;
 
+    // Kiểm tra nếu size, màu sắc hoặc số lượng chưa được chọn
     if (!selectedSize && !selectedColor) {
       setErrorMessage("Vui lòng chọn size và màu sắc");
       isValid = false;
@@ -60,17 +61,29 @@ const Details = () => {
     } else if (!selectedColor) {
       setErrorMessage("Vui lòng chọn màu sắc");
       isValid = false;
+    } else if (count < 1) {
+      setErrorMessage("Vui lòng chọn số lượng hợp lệ");
+      isValid = false;
     }
 
+    // Nếu tất cả các lựa chọn hợp lệ, thêm sản phẩm vào giỏ hàng
     if (isValid) {
-      addToCart(products1);
-      alert("Thêm giỏ hàng thành công!");
+      const productWithOptions = {
+        ...products1, // Giả sử products1 là thông tin sản phẩm
+        size: selectedSize,
+        color: selectedColor,
+        quantity: count,
+      };
+
+      addToCart(productWithOptions);
+      alert("Thêm vào giỏ hàng thành công!");
     }
   };
 
-  const handleBuyNow = () => {
+  const handleBuyNow = (productId) => {
     let isValid = true;
 
+    // Kiểm tra nếu size, màu sắc hoặc số lượng chưa được chọn
     if (!selectedSize && !selectedColor) {
       setErrorMessage("Vui lòng chọn size và màu sắc");
       isValid = false;
@@ -80,17 +93,23 @@ const Details = () => {
     } else if (!selectedColor) {
       setErrorMessage("Vui lòng chọn màu sắc");
       isValid = false;
+    } else if (count < 1) {
+      setErrorMessage("Vui lòng chọn số lượng hợp lệ");
+      isValid = false;
     }
 
+    // Nếu tất cả các lựa chọn hợp lệ, chuyển đến trang thanh toán
     if (isValid) {
-      navigate("/pay");
+      navigate("/pay", {
+        state: { productId, selectedSize, selectedColor, count },
+      });
       window.scrollTo(0, 0);
     }
   };
 
   useEffect(() => {
     if (id) {
-      fetch(`http://192.168.10.226:8080/api/v1/products/${id}`)
+      fetch(`http://192.168.10.164:8080/api/v1/products/${id}`)
         .then((res) => res.json())
         .then((data) => {
           console.log("Received data:", data);
@@ -112,7 +131,7 @@ const Details = () => {
 
   useEffect(() => {
     if (id) {
-      fetch(`http://192.168.10.226:8080/api/v1/products/images/${id}`)
+      fetch(`http://192.168.10.164:8080/api/v1/products/images/${id}`)
         .then((res) => res.json())
         .then((data) => {
           console.log("Received data:", data);
@@ -254,20 +273,25 @@ const Details = () => {
               </div>
               <div className="productDetailsColor2">
                 <button
-                  onClick={() => handleColorClick("Trắng")}
-                  className={selectedColor === "Trắng" ? "selected" : ""}
+                  onClick={() => handleColorClick(products1?.color)}
+                  className={
+                    selectedColor === products1?.color ? "selected" : ""
+                  }
                 >
-                  Trắng
-                  {selectedColor === "Trắng" && (
+                  {products1?.color}
+                  {selectedColor === products1?.color && (
                     <div className="corner-check"></div>
                   )}
                 </button>
+
                 <button
-                  onClick={() => handleColorClick("Đen")}
-                  className={selectedColor === "Đen" ? "selected" : ""}
+                  onClick={() => handleColorClick(products1?.color2)}
+                  className={
+                    selectedColor === products1?.color2 ? "selected" : ""
+                  }
                 >
-                  Đen
-                  {selectedColor === "Đen" && (
+                  {products1?.color2}
+                  {selectedColor === products1?.color2 && (
                     <div className="corner-check"></div>
                   )}
                 </button>
@@ -294,7 +318,10 @@ const Details = () => {
                 <button onClick={handleAddToCart} className="btnAdd">
                   Thêm Vào Giỏ Hàng
                 </button>
-                <button onClick={handleBuyNow} className="btnBuy">
+                <button
+                  onClick={() => handleBuyNow(products1.id)}
+                  className="btnBuy"
+                >
                   Mua Ngay
                 </button>
               </div>

@@ -12,7 +12,7 @@ const AccountUser = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("http://192.168.10.226:8080/api/v1/users")
+    fetch("http://192.168.10.164:8080/api/v1/users")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Không thể lấy dữ liệu");
@@ -20,8 +20,8 @@ const AccountUser = () => {
         return response.json();
       })
       .then((data) => {
-        console.log("Danh sách người dùng:", data); // Xem dữ liệu trong console
-        setUsers(data); // Lưu dữ liệu vào state
+        console.log("Danh sách người dùng:", data);
+        setUsers(data);
       })
       .catch((error) => {
         console.error("Lỗi khi gọi API:", error);
@@ -70,6 +70,16 @@ const AccountUser = () => {
     navigate("/adminCategory");
   };
 
+  const handleLogoutAdmin = () => {
+    localStorage.removeItem("user_name");
+    localStorage.removeItem("password");
+    localStorage.removeItem("token");
+    localStorage.removeItem("roleName");
+    localStorage.removeItem("cartItems");
+    navigate("/login");
+    window.scrollTo(0, 0);
+  };
+
   return (
     <div id="main">
       <div
@@ -81,11 +91,11 @@ const AccountUser = () => {
         className="HeaderAdmin"
       >
         <div className="LogoShopAdmin">
-          <h1 onClick={handleAdmin}>TRYST </h1>
+          <h1 onClick={handleHome}>TRYST </h1>
         </div>
 
         <div className="LogOutAdmin">
-          <div onClick={handleHome} className="IconLogoutAdmin">
+          <div onClick={handleLogoutAdmin} className="IconLogoutAdmin">
             <i class="fa-solid fa-arrow-right-from-bracket"></i>
           </div>
         </div>
@@ -94,7 +104,7 @@ const AccountUser = () => {
       <div className="AdminPage">
         <div className="AdminPageLeft">
           <div className="AdminLeftTitle">
-            <h5>TRANG QUẢN TRỊ</h5>
+            <h5 onClick={handleAdmin}>TRANG QUẢN TRỊ</h5>
           </div>
 
           <div className="AdminMenuHeader">

@@ -1,0 +1,91 @@
+body,
+html {
+  font-family: "Roboto Condensed", sans-serif;
+}
+
+.TitleAdminOrder {
+  margin-top: 22px;
+  padding: 17px 10px 17px 10px;
+  display: grid;
+  text-align: center;
+  grid-template-columns: 10% 20% 20% 15% 10% 15% 10%;
+  background-color: #eeeeee;
+}
+
+.OrderItem {
+  display: grid;
+  text-align: center;
+  grid-template-columns: 10% 20% 20% 15% 10% 15% 5% 5%;
+  border-bottom: 1px solid #cccccc;
+}
+
+.OrderItem i {
+  cursor: pointer;
+}
+
+.OrderID,
+.OrderDisable {
+  padding: 17px 0 17px 0;
+}
+
+.OrderName,
+.OrderAddress,
+.OrderPhone,
+.OrderPrice,
+.OrderStatus,
+.OrderWatch {
+  padding: 17px 0 17px 0;
+  border-right: 1px solid #cccccc;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-50%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.delete-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.delete {
+  text-align: center;
+  background: white;
+  width: 400px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: slideDown 0.5s ease-out;
+}
+
+.delete p {
+  font-size: 18px;
+  padding-top: 50px;
+  padding-bottom: 20px;
+}
+
+.ButtonDeleteProduct {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  padding-bottom: 20px;
+}
+
+.ButtonDeleteProduct button {
+  padding: 10px;
+  cursor: pointer;
+}

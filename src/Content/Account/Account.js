@@ -2,32 +2,90 @@ import React, { useState, useEffect } from "react";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import "./Account.css";
-import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
+// Hàm format ngày sinh
+const formatDate = (date) => {
+  const newDate = new Date(date);
+  return newDate.toLocaleDateString(); // Định dạng ngày theo kiểu "MM/DD/YYYY"
+};
 
 const Account = () => {
-  const [isEditing, setIsEditing] = useState(false);
   const [profile, setProfile] = useState({
-    name: "",
-    dob: "",
+    fullName: "",
     address: "",
-    email: "",
+    dateOfBirth: "",
+    phoneNumber: "",
   });
-
-  const [fullName, setFullName] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
-    const storedFullName = localStorage.getItem("full_name");
-    if (storedFullName) {
-      setFullName(storedFullName); // Lưu vào state để sử dụng
+    if (token) {
+      axios
+        .post(
+          "http://192.168.10.164:8080/api/v1/users/details",
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          console.log("User details:", response.data);
+
+          const { fullname, address, date_of_birth, phone_number } =
+            response.data;
+
+          // Lưu thông tin người dùng vào state
+          setProfile({
+            fullName: fullname || "Chưa nhập tên",
+            address: address || "Chưa nhập địa chỉ",
+            dateOfBirth: date_of_birth
+              ? formatDate(date_of_birth)
+              : "Chưa nhập ngày sinh",
+            phoneNumber: phone_number || "Chưa nhập số điện thoại",
+          });
+        })
+        .catch((error) => {
+          console.error("Error fetching user details:", error);
+        });
     }
-  }, []);
+  }, [token]);
+
+  const handleSave = () => {
+    const userId = localStorage.getItem("user_id");
+
+    // Gửi thông tin đã sửa tới backend
+    axios
+      .put(
+        `http://192.168.10.164:8080/api/v1/users/details/${userId}`,
+        {
+          fullname: profile.fullName,
+          address: profile.address,
+          date_of_birth: profile.dateOfBirth,
+          phone_number: profile.phoneNumber,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Profile updated successfully", response.data);
+        alert("Sửa thông tin thành công");
+        setIsEditing(false);
+        // Đóng chế độ chỉnh sửa sau khi lưu thành công
+      })
+      .catch((error) => {
+        console.error("Error updating profile:", error);
+      });
+  };
 
   const handleChange = (e) => {
     setProfile({ ...profile, [e.target.name]: e.target.value });
-  };
-
-  const handleSave = () => {
-    setIsEditing(false);
   };
 
   const handleEdit = () => {
@@ -50,7 +108,7 @@ const Account = () => {
         <div className="AccountLeft">
           <div className="AccountLeftTitle">
             <h5>TRANG TÀI KHOẢN</h5>
-            <p>Xin chào, Quang Vinh!</p>
+            <p>Xin chào, {profile.fullName}!</p>
           </div>
 
           <div className="AccountLeftContent">
@@ -73,36 +131,16 @@ const Account = () => {
               <div className="ProfileFormTitle">
                 <label>Họ tên:</label>
               </div>
-
               <div className="ProfileFormInput">
                 {isEditing ? (
                   <input
                     type="text"
-                    name="name"
-                    value={profile.name}
+                    name="fullName"
+                    value={profile.fullName}
                     onChange={handleChange}
                   />
                 ) : (
-                  <p>{fullName || "Chưa nhập tên"}</p>
-                )}
-              </div>
-            </div>
-
-            <div className="ProfileForm">
-              <div className="ProfileFormTitle">
-                <label>Email:</label>
-              </div>
-
-              <div className="ProfileFormInput">
-                {isEditing ? (
-                  <input
-                    type="email"
-                    name="email"
-                    value={profile.email}
-                    onChange={handleChange}
-                  />
-                ) : (
-                  <p>{profile.email || "Chưa nhập email"}</p>
+                  <p>{profile.fullName}</p>
                 )}
               </div>
             </div>
@@ -111,7 +149,6 @@ const Account = () => {
               <div className="ProfileFormTitle">
                 <label>Địa chỉ:</label>
               </div>
-
               <div className="ProfileFormInput">
                 {isEditing ? (
                   <input
@@ -121,7 +158,7 @@ const Account = () => {
                     onChange={handleChange}
                   />
                 ) : (
-                  <p>{profile.address || "Chưa nhập địa chỉ nhà"}</p>
+                  <p>{profile.address}</p>
                 )}
               </div>
             </div>
@@ -130,17 +167,34 @@ const Account = () => {
               <div className="ProfileFormTitle">
                 <label>Ngày sinh:</label>
               </div>
-
               <div className="ProfileFormInput">
                 {isEditing ? (
                   <input
                     type="date"
-                    name="dob"
-                    value={profile.dob}
+                    name="dateOfBirth"
+                    value={profile.dateOfBirth}
                     onChange={handleChange}
                   />
                 ) : (
-                  <p>{profile.dob || "Chưa nhập ngày sinh"}</p>
+                  <p>{profile.dateOfBirth}</p>
+                )}
+              </div>
+            </div>
+
+            <div className="ProfileForm">
+              <div className="ProfileFormTitle">
+                <label>Số điện thoại:</label>
+              </div>
+              <div className="ProfileFormInput">
+                {isEditing ? (
+                  <input
+                    type="number"
+                    name="phoneNumber"
+                    value={profile.phoneNumber}
+                    onChange={handleChange}
+                  />
+                ) : (
+                  <p>{profile.phoneNumber}</p>
                 )}
               </div>
             </div>

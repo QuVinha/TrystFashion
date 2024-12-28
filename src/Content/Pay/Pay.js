@@ -10,8 +10,6 @@ import IconVnpay from "../../assets/img/IconPayment/iconVnpay.png";
 import IconMomo from "../../assets/img/IconPayment/iconMomo.png";
 import IconMoney from "../../assets/img/IconPayment/iconMoney.png";
 import IconTransfer from "../../assets/img/IconPayment/iconTransfer.png";
-import AoJersey2 from "../../../src/assets/img/featProducts/Jersey2.png";
-import FeatProducts1 from "../../../src/assets/img/featProducts/featPrd1.jpg";
 
 const Pay = () => {
   const [cities, setCities] = useState([]);
@@ -26,11 +24,17 @@ const Pay = () => {
   const [error, setError] = useState(null);
   const [shippingMethod, setShippingMethod] = useState("saving");
   const [shippingCost, setShippingCost] = useState(25000);
-  const { productId, cartItems = [] } = location.state || {};
+  const {
+    productId,
+    cartItems = [],
+    selectedSize,
+    selectedColor,
+    count,
+  } = location.state || {};
 
   useEffect(() => {
     if (productId) {
-      fetch(`http://172.17.68.220:8080/api/v1/products/${productId}`)
+      fetch(`http://192.168.10.164:8080/api/v1/products/${productId}`)
         .then((res) => {
           if (!res.ok) throw new Error("Failed to fetch product data");
           return res.json();
@@ -92,7 +96,7 @@ const Pay = () => {
   const totalPrice = cartItems.length
     ? cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)
     : products1
-    ? products1.price
+    ? products1.price * count
     : 0;
 
   // Trả về giao diện trong trường hợp đang tải hoặc có lỗi
@@ -352,6 +356,9 @@ const Pay = () => {
                   </div>
                   <div className="ProductPayName">
                     <h5>{products1?.name}</h5>
+                    <p>Size {selectedSize}</p>
+                    <p>Màu {selectedColor}</p>
+                    <p>Số lượng {count}</p>
                   </div>
                   <div className="ProductPayPrice">
                     <p>
@@ -374,8 +381,8 @@ const Pay = () => {
                     </div>
                     <div className="ProductPayName">
                       <h5>{product.name}</h5>
-                      {/* <p>Size M</p>
-                      <p>Màu đỏ</p> */}
+                      <p>Màu: {product.color || "N/A"}</p>
+                      <p>Size: {product.size || "N/A"}</p>
                       <p>Số lượng: {product.quantity}</p>
                     </div>
                     <div className="ProductPayPrice">

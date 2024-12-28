@@ -109,33 +109,13 @@ html {
 
 .featProductsImg {
   width: 240px;
-  height: 240px;
+  height: 200px;
   position: relative;
 }
 
 .featProductsImg img {
   width: 100%;
-}
-
-.iconOverlay {
-  position: absolute;
-  top: 75%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  gap: 10px;
-  opacity: 0; /* Ẩn icon mặc định */
-  transition: opacity 0.3s ease-in-out;
-}
-
-.iconOverlay i {
-  font-size: 18px;
-  color: white;
-  background-color: rgba(0, 0, 0, 0.7); /* Nền đen mờ cho icon */
-  padding: 10px;
-  border-radius: 50%;
   cursor: pointer;
-  transition: transform 0.3s ease-in-out;
 }
 
 .featProductsContent:hover .iconOverlay {
@@ -157,6 +137,7 @@ html {
 .featProductsName {
   font-size: 15px;
   font-weight: 800;
+  height: 35px;
   text-transform: uppercase;
 }
 
@@ -328,7 +309,7 @@ html {
 .productWC5Img {
   width: 45%;
   height: 285px;
-  /* box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4); */
+  cursor: pointer;
 }
 
 .productWC5Img img {

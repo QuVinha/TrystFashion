@@ -44,24 +44,27 @@ const AddProduct = () => {
     try {
       const token = localStorage.getItem("token"); // Lấy token từ localStorage
 
-      const response = await fetch("http://192.168.10.226/api/v1/products", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Gửi token trong header
-        },
-        body: JSON.stringify({
-          name: productData.name,
-          price: parseFloat(productData.price), // Đảm bảo giá trị giá là số
-          quantity: parseInt(productData.quantity, 10), // Đảm bảo số lượng là số nguyên
-          category_id: parseInt(productData.category_id, 10), // Đảm bảo category_id là số nguyên
-          color: productData.color,
-          code: productData.code,
-          color2: productData.color2,
-          description: productData.description,
-          url: "", // Nếu bạn có trường này, có thể thêm URL ở đây.
-        }),
-      });
+      const response = await fetch(
+        "http://192.168.10.164:8080/api/v1/products",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Gửi token trong header
+          },
+          body: JSON.stringify({
+            name: productData.name,
+            price: parseFloat(productData.price), // Đảm bảo giá trị giá là số
+            quantity: parseInt(productData.quantity, 10), // Đảm bảo số lượng là số nguyên
+            category_id: parseInt(productData.category_id, 10), // Đảm bảo category_id là số nguyên
+            color: productData.color,
+            code: productData.code,
+            color2: productData.color2,
+            description: productData.description,
+            url: "", // Nếu bạn có trường này, có thể thêm URL ở đây.
+          }),
+        }
+      );
 
       if (response.ok) {
         alert("Thêm sản phẩm thành công!");
@@ -254,7 +257,7 @@ const AddProduct = () => {
             </div>
 
             <div className="ButtonAddProduct">
-              <button>THÊM SẢN PHẨM</button>
+              <button onClick={handleAddProduct}>THÊM SẢN PHẨM</button>
             </div>
           </div>
         </div>

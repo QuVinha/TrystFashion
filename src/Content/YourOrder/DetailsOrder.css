@@ -1,0 +1,12 @@
+html {
+  font-family: "Roboto Condensed", sans-serif;
+}
+
+.DetailsOrder {
+}
+
+.ContentDetailsOrder {
+  margin: 10px 70px 60px 70px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+}

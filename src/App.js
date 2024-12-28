@@ -13,9 +13,12 @@ import Contact from "./Content/Contact/Contact";
 import Account from "./Content/Account/Account";
 import ChangePassWord from "./Content/ChangePassword/ChangePassWord";
 import Pay from "./Content/Pay/Pay";
+import YourOrder from "./Content/YourOrder/YourOrder";
+import DetailsOrder from "./Content/YourOrder/DetailsOrder";
 import Admin from "./Admin/Admin";
 import AccountUser from "./Admin/AdminAccount/AccountUser";
 import AdminOrder from "./Admin/AdminOrder/AdminOrder";
+import AdminOrderDetails from "./Admin/AdminOrderDetails/AdminOrderDetails";
 import AdminProduct from "./Admin/AdminProduct/AdminProduct";
 import AdminCategory from "./Admin/AdminCategory/AdminCategory";
 import AddProduct from "./Admin/AddProduct/AddProduct";
@@ -48,6 +51,11 @@ function App() {
         <Route path="/contact" element={<Contact user_name={username} />} />
         <Route path="/cart" element={<Cart user_name={username} />} />
         <Route path="/pay" element={<Pay user_name={username} />} />
+        <Route path="/yourOrder" element={<YourOrder user_name={username} />} />
+        <Route
+          path="/detailsOrder"
+          element={<DetailsOrder user_name={username} />}
+        />
         <Route path="/admin" element={<Admin user_name={username} />} />
         <Route
           path="/accountUser"
@@ -57,6 +65,10 @@ function App() {
         <Route
           path="/adminOrder"
           element={<AdminOrder user_name={username} />}
+        />
+        <Route
+          path="/adminOrderDetails"
+          element={<AdminOrderDetails user_name={username} />}
         />
         <Route
           path="/adminProduct"

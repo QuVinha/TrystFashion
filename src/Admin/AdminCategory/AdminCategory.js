@@ -1,47 +1,34 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import "./AdminCategory.css";
 import { useNavigate } from "react-router-dom";
 
 const AdminCategory = () => {
   const navigate = useNavigate();
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const Delete = () => setIsDeleteOpen(true);
-  const closeDelete = () => setIsDeleteOpen(false);
-  const [categories, setCategories] = useState([]); // Lưu dữ liệu từ API
-  const [loading, setLoading] = useState(true); // Trạng thái tải dữ liệu
-  const [error, setError] = useState(null); // Lưu lỗi nếu có
+  const [deleteCategoryId, setDeleteCategoryId] = useState(null); // Lưu ID danh mục cần xóa
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Gọi API khi component được render
-    fetch("http://192.168.10.226:8080/api/v1/categories")
+    fetch("http://192.168.10.164:8080/api/v1/categories")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch categories");
         }
-        return response.json(); // Chuyển đổi dữ liệu thành JSON
+        return response.json();
       })
       .then((data) => {
-        console.log("Categories:", data); // Xem dữ liệu trả về trong console
-        setCategories(data); // Lưu dữ liệu vào state
+        setCategories(data);
       })
       .catch((err) => {
-        console.error("Error fetching categories:", err);
         setError("Có lỗi khi tải dữ liệu");
       })
       .finally(() => {
-        setLoading(false); // Dừng trạng thái tải dữ liệu
+        setLoading(false);
       });
   }, []);
 
-  // Nếu đang tải dữ liệu
-  if (loading) {
-    return <p>Đang tải dữ liệu...</p>;
-  }
-
-  // Nếu có lỗi
-  if (error) {
-    return <p>{error}</p>;
-  }
   const handleHome = () => {
     navigate("/");
   };
@@ -50,8 +37,8 @@ const AdminCategory = () => {
     navigate("/addCategory");
   };
 
-  const handleEditCategory = () => {
-    navigate("/editCategory");
+  const handleEditCategory = (id) => {
+    navigate("/editCategory", { state: { id } });
   };
 
   const handleAdmin = () => {
@@ -73,23 +60,79 @@ const AdminCategory = () => {
   const handleAdminCategory = () => {
     navigate("/adminCategory");
   };
+
+  const handleLogoutAdmin = () => {
+    localStorage.removeItem("user_name");
+    localStorage.removeItem("password");
+    localStorage.removeItem("token");
+    localStorage.removeItem("roleName");
+    localStorage.removeItem("cartItems");
+    navigate("/login");
+    window.scrollTo(0, 0);
+  };
+
+  // Mở popup xác nhận xóa
+  const openDeletePopup = (categoryId) => {
+    setDeleteCategoryId(categoryId);
+    setIsDeleteOpen(true);
+  };
+
+  // Đóng popup
+  const closeDeletePopup = () => {
+    setDeleteCategoryId(null);
+    setIsDeleteOpen(false);
+  };
+
+  // Hàm xóa danh mục
+  const handleDeleteCategory = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(
+        `http://192.168.10.164:8080/api/v1/categories/${deleteCategoryId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        alert("Xoá danh mục thành công");
+        setCategories(
+          categories.filter((category) => category.id !== deleteCategoryId)
+        );
+        closeDeletePopup();
+      } else {
+        alert("Xoá danh mục không thành công");
+      }
+    } catch (error) {
+      alert("Lỗi khi xóa danh mục");
+    }
+  };
+
+  // Nếu đang tải dữ liệu
+  if (loading) {
+    return <p>Đang tải dữ liệu...</p>;
+  }
+
+  // Nếu có lỗi
+  if (error) {
+    return <p>{error}</p>;
+  }
+
   return (
     <div id="main">
-      <div
-        style={{
-          width: "100%",
-          height: "15vh",
-          zIndex: 1,
-        }}
-        className="HeaderAdmin"
-      >
+      <div className="HeaderAdmin">
         <div className="LogoShopAdmin">
-          <h1 onClick={handleAdmin}>TRYST </h1>
+          <h1 onClick={handleHome}>TRYST </h1>
         </div>
 
         <div className="LogOutAdmin">
-          <div onClick={handleHome} className="IconLogoutAdmin">
-            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          <div onClick={handleLogoutAdmin} className="IconLogoutAdmin">
+            <i className="fa-solid fa-arrow-right-from-bracket"></i>
           </div>
         </div>
       </div>
@@ -97,7 +140,7 @@ const AdminCategory = () => {
       <div className="AdminPage">
         <div className="AdminPageLeft">
           <div className="AdminLeftTitle">
-            <h5>TRANG QUẢN TRỊ</h5>
+            <h5 onClick={handleAdmin}>TRANG QUẢN TRỊ</h5>
           </div>
 
           <div className="AdminMenuHeader">
@@ -106,22 +149,22 @@ const AdminCategory = () => {
 
           <div className="AdminMenu">
             <div onClick={handleAccountUser} className="NavAdminMenu1">
-              <i class="fa-solid fa-user"></i>
+              <i className="fa-solid fa-user"></i>
               <a>Quản lý tài khoản</a>
             </div>
 
             <div onClick={handleAdminProduct} className="NavAdminMenu2">
-              <i class="fa-solid fa-shirt"></i>
+              <i className="fa-solid fa-shirt"></i>
               <a>Quản lý sản phẩm</a>
             </div>
 
             <div onClick={handleAdminCategory} className="NavAdminMenu3">
-              <i class="fa-solid fa-list"></i>
+              <i className="fa-solid fa-list"></i>
               <a>Quản lý danh mục sản phẩm</a>
             </div>
 
             <div onClick={handleAdminOrder} className="NavAdminMenu4">
-              <i class="fa-solid fa-truck"></i>
+              <i className="fa-solid fa-truck"></i>
               <a>Quản lý đơn hàng</a>
             </div>
           </div>
@@ -134,8 +177,7 @@ const AdminCategory = () => {
 
             <div className="ButtonAddCate">
               <button onClick={handleAddCategory}>
-                {" "}
-                Thêm danh mục sản phẩm <i class="fa-solid fa-plus"></i>{" "}
+                Thêm danh mục sản phẩm <i className="fa-solid fa-plus"></i>
               </button>
             </div>
           </div>
@@ -178,7 +220,7 @@ const AdminCategory = () => {
 
                 <div className="DeleteCategory">
                   <i
-                    onClick={() => Delete(category.id)}
+                    onClick={() => openDeletePopup(category.id)}
                     className="fa-solid fa-trash"
                   ></i>
                 </div>
@@ -191,30 +233,12 @@ const AdminCategory = () => {
               <div className="delete">
                 <p>Bạn có chắc chắn muốn xoá danh mục này?</p>
                 <div className="ButtonDeleteCategory">
-                  <button onClick={closeDelete}>Không</button>
-                  <button>Chắc chắn</button>
+                  <button onClick={closeDeletePopup}>Không</button>
+                  <button onClick={handleDeleteCategory}>Chắc chắn</button>
                 </div>
               </div>
             </div>
           )}
-
-          {/* <div className="ListCategory">
-            <div className="IdCategory">
-              <p>6</p>
-            </div>
-
-            <div className="NameCategory">
-              <p>SWEATER</p>
-            </div>
-
-            <div className="EditCategory">
-              <i class="fa-regular fa-pen-to-square"></i>
-            </div>
-
-            <div className="DeleteCategory">
-              <i class="fa-solid fa-trash"></i>
-            </div>
-          </div> */}
         </div>
       </div>
     </div>

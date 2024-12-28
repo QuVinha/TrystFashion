@@ -1,10 +1,26 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./EditProduct.css";
-import { useNavigate } from "react-router-dom";
 
 const EditProduct = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isAdmin, setIsAdmin] = useState(false);
+  const { id } = location.state || {};
+
+  const [productData, setProductData] = useState({
+    name: "",
+    category_id: "",
+    price: "",
+    color: "",
+    color2: "",
+    quantity: "",
+    code: "",
+    description: "",
+    image: "",
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const roleName = localStorage.getItem("roleName"); // Lấy roleName từ localStorage
@@ -14,30 +30,50 @@ const EditProduct = () => {
     }
   }, []);
 
-  const [productData, setProductData] = useState({
-    name: "",
-    category_id: "",
-    price: "",
-    quantity: "",
-    color: "",
-    color2: "",
-    code: "",
-    description: "",
-  });
+  useEffect(() => {
+    if (id) {
+      fetch(`http://192.168.10.164:8080/api/v1/products/${id}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data) {
+            setProductData({
+              name: data.name,
+              category_id: data.category_id,
+              price: data.price,
+              color: data.color,
+              color2: data.color2,
+              quantity: data.quantity,
+              code: data.code,
+              description: data.description,
+              image: data.image,
+            });
+          } else {
+            setError("Không tìm thấy sản phẩm");
+          }
+        })
+        .catch((error) => {
+          setError("Lỗi khi tải sản phẩm");
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  }, [id]);
 
-  // Hàm xử lý thay đổi input
-  const handleInputChange = (e) => {
+  // Hàm xử lý thay đổi giá trị trong các input
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    setProductData((prevState) => ({
-      ...prevState,
+    setProductData((prevData) => ({
+      ...prevData,
       [name]: value,
     }));
   };
 
-  // Gửi dữ liệu sản phẩm mới lên API
-  const handleAddProduct = async () => {
+  // Hàm chỉnh sửa sản phẩm
+  const handleEditProduct = async () => {
+    // Kiểm tra xem người dùng có quyền admin không
     if (!isAdmin) {
-      alert("Bạn không có quyền thêm sản phẩm.");
+      alert("Bạn không có quyền chỉnh sửa sản phẩm.");
       return;
     }
 
@@ -45,49 +81,32 @@ const EditProduct = () => {
       const token = localStorage.getItem("token"); // Lấy token từ localStorage
 
       const response = await fetch(
-        "http://192.168.10.226:8080/api/v1/products",
+        `http://192.168.10.164:8080/api/v1/products/${id}`,
         {
-          method: "POST",
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`, // Gửi token trong header
           },
-          body: JSON.stringify({
-            name: productData.name,
-            price: parseFloat(productData.price), // Đảm bảo giá trị giá là số
-            quantity: parseInt(productData.quantity, 10), // Đảm bảo số lượng là số nguyên
-            category_id: parseInt(productData.category_id, 10), // Đảm bảo category_id là số nguyên
-            color: productData.color,
-            code: productData.code,
-            color2: productData.color2,
-            description: productData.description,
-            url: "", // Nếu bạn có trường này, có thể thêm URL ở đây.
-          }),
+          body: JSON.stringify(productData), // Gửi dữ liệu cập nhật sản phẩm
         }
       );
 
       if (response.ok) {
-        alert("Thêm sản phẩm thành công!");
-        // Reset form nếu cần
-        setProductData({
-          name: "",
-          category_id: "",
-          price: "",
-          quantity: "",
-          color: "",
-          color2: "",
-          code: "",
-          description: "",
-        });
+        // Nếu cập nhật thành công
+        alert("Cập nhật sản phẩm thành công");
+        navigate("/adminProduct"); // Chuyển hướng về trang quản lý sản phẩm
       } else {
-        alert("Có lỗi xảy ra, vui lòng thử lại.");
+        // Nếu cập nhật không thành công
+        alert("Cập nhật sản phẩm không thành công");
       }
     } catch (error) {
-      console.error("Lỗi khi gửi yêu cầu:", error);
-      alert("Có lỗi xảy ra, vui lòng thử lại.");
+      // Nếu có lỗi khi gửi yêu cầu
+      alert("Lỗi khi cập nhật sản phẩm");
     }
   };
 
+  // Các hàm điều hướng
   const handleHome = () => {
     navigate("/");
   };
@@ -112,6 +131,14 @@ const EditProduct = () => {
     navigate("/adminCategory");
   };
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+
   return (
     <div id="main">
       <div
@@ -128,7 +155,7 @@ const EditProduct = () => {
 
         <div className="LogOutAdmin">
           <div onClick={handleHome} className="IconLogoutAdmin">
-            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <i className="fa-solid fa-arrow-right-from-bracket"></i>
           </div>
         </div>
       </div>
@@ -145,22 +172,22 @@ const EditProduct = () => {
 
           <div className="AdminMenu">
             <div onClick={handleAccountUser} className="NavAdminMenu1">
-              <i class="fa-solid fa-user"></i>
+              <i className="fa-solid fa-user"></i>
               <a>Quản lý tài khoản</a>
             </div>
 
             <div onClick={handleAdminProduct} className="NavAdminMenu2">
-              <i class="fa-solid fa-shirt"></i>
+              <i className="fa-solid fa-shirt"></i>
               <a>Quản lý sản phẩm</a>
             </div>
 
             <div onClick={handleAdminCategory} className="NavAdminMenu3">
-              <i class="fa-solid fa-list"></i>
+              <i className="fa-solid fa-list"></i>
               <a>Quản lý danh mục sản phẩm</a>
             </div>
 
             <div onClick={handleAdminOrder} className="NavAdminMenu4">
-              <i class="fa-solid fa-truck"></i>
+              <i className="fa-solid fa-truck"></i>
               <a>Quản lý đơn hàng</a>
             </div>
           </div>
@@ -178,7 +205,7 @@ const EditProduct = () => {
                 placeholder="Tên Sản Phẩm"
                 name="name"
                 value={productData.name}
-                onChange={handleInputChange}
+                onChange={handleChange}
               />
             </div>
 
@@ -188,7 +215,7 @@ const EditProduct = () => {
                 placeholder="Danh Mục"
                 name="category_id"
                 value={productData.category_id}
-                onChange={handleInputChange}
+                onChange={handleChange}
               />
 
               <input
@@ -196,7 +223,7 @@ const EditProduct = () => {
                 placeholder="Đơn Giá"
                 name="price"
                 value={productData.price}
-                onChange={handleInputChange}
+                onChange={handleChange}
               />
             </div>
 
@@ -206,7 +233,7 @@ const EditProduct = () => {
                 placeholder="Màu 1"
                 name="color"
                 value={productData.color}
-                onChange={handleInputChange}
+                onChange={handleChange}
               />
 
               <input
@@ -214,7 +241,7 @@ const EditProduct = () => {
                 placeholder="Màu 2"
                 name="color2"
                 value={productData.color2}
-                onChange={handleInputChange}
+                onChange={handleChange}
               />
             </div>
 
@@ -224,7 +251,7 @@ const EditProduct = () => {
                 placeholder="Số lượng"
                 name="quantity"
                 value={productData.quantity}
-                onChange={handleInputChange}
+                onChange={handleChange}
               />
 
               <input
@@ -232,7 +259,7 @@ const EditProduct = () => {
                 placeholder="Mã sản phẩm"
                 name="code"
                 value={productData.code}
-                onChange={handleInputChange}
+                onChange={handleChange}
               />
             </div>
 
@@ -242,7 +269,7 @@ const EditProduct = () => {
                 name="description"
                 placeholder="Mô tả sản phẩm"
                 value={productData.description}
-                onChange={handleInputChange}
+                onChange={handleChange}
               ></textarea>
             </div>
 
@@ -252,12 +279,12 @@ const EditProduct = () => {
                 accept="image/*"
                 placeholder="Hình ảnh sản phẩm"
                 name="image"
-                // onChange={handleFileChange} // Hàm xử lý khi người dùng chọn file
+                onChange={handleChange}
               />
             </div>
 
             <div className="ButtonAddProduct">
-              <button>CHỈNH SỬA</button>
+              <button onClick={handleEditProduct}>CHỈNH SỬA</button>
             </div>
           </div>
         </div>

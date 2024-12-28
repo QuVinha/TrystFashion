@@ -130,7 +130,7 @@ const Register = () => {
 
     try {
       const response = await axios.post(
-        "http://192.168.10.226:8080/api/v1/users/register",
+        "http://192.168.10.164:8080/api/v1/users/register",
         userData
       );
       alert("Đăng ký thành công");

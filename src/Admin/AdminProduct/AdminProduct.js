@@ -5,14 +5,16 @@ import { useNavigate } from "react-router-dom";
 const AdminProduct = () => {
   const navigate = useNavigate();
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [deleteProductId, setDeleteProductId] = useState(null);
   const Delete = () => setIsDeleteOpen(true);
   const closeDelete = () => setIsDeleteOpen(false);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    fetch("http://192.168.10.226:8080/api/v1/products")
+    fetch("http://192.168.10.164:8080/api/v1/products")
       .then((res) => res.json())
       .then((data) => {
         console.log("Dữ liệu nhận được:", data);
@@ -33,6 +35,62 @@ const AdminProduct = () => {
       });
   }, []);
 
+  useEffect(() => {
+    const roleName = localStorage.getItem("roleName"); // Lấy roleName từ localStorage
+    const token = localStorage.getItem("token"); // Lấy token từ localStorage
+    if (roleName === "ADMIN" && token) {
+      setIsAdmin(true); // Nếu người dùng là admin và có token hợp lệ
+    }
+  }, []);
+
+  const openDeletePopup = (productId) => {
+    setDeleteProductId(productId); // Lưu ID sản phẩm cần xóa
+    setIsDeleteOpen(true);
+  };
+
+  const closeDeletePopup = () => {
+    setDeleteProductId(null); // Xóa ID sản phẩm cần xóa
+    setIsDeleteOpen(false);
+  };
+
+  const handleDeleteProduct = async () => {
+    // Kiểm tra xem người dùng có quyền admin không
+    if (!isAdmin) {
+      alert("Bạn không có quyền xóa sản phẩm.");
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("token"); // Lấy token từ localStorage
+
+      const response = await fetch(
+        `http://192.168.10.164:8080/api/v1/products/${deleteProductId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Gửi token trong header
+          },
+        }
+      );
+
+      if (response.ok) {
+        // Nếu xoá thành công
+        alert("Xoá sản phẩm thành công");
+        setProducts(
+          products.filter((product) => product.id !== deleteProductId)
+        ); // Cập nhật lại danh sách sản phẩm
+        closeDeletePopup(); // Đóng popup xác nhận xóa
+      } else {
+        // Nếu không thành công
+        alert("Xoá sản phẩm không thành công");
+      }
+    } catch (error) {
+      // Nếu có lỗi khi gửi yêu cầu
+      alert("Lỗi khi xóa sản phẩm");
+    }
+  };
+
   const handleHome = () => {
     navigate("/");
   };
@@ -41,8 +99,8 @@ const AdminProduct = () => {
     navigate("/addProduct");
   };
 
-  const handleEditProduct = () => {
-    navigate("/editProduct");
+  const handleEditProduct = (productId) => {
+    navigate("/editProduct", { state: { id: productId } });
   };
 
   const handleAdmin = () => {
@@ -64,6 +122,17 @@ const AdminProduct = () => {
   const handleAdminCategory = () => {
     navigate("/adminCategory");
   };
+
+  const handleLogoutAdmin = () => {
+    localStorage.removeItem("user_name");
+    localStorage.removeItem("password");
+    localStorage.removeItem("token");
+    localStorage.removeItem("roleName");
+    localStorage.removeItem("cartItems");
+    navigate("/login");
+    window.scrollTo(0, 0);
+  };
+
   return (
     <div id="main">
       <div
@@ -75,11 +144,11 @@ const AdminProduct = () => {
         className="HeaderAdmin"
       >
         <div className="LogoShopAdmin">
-          <h1 onClick={handleAdmin}>TRYST </h1>
+          <h1 onClick={handleHome}>TRYST </h1>
         </div>
 
         <div className="LogOutAdmin">
-          <div onClick={handleHome} className="IconLogoutAdmin">
+          <div onClick={handleLogoutAdmin} className="IconLogoutAdmin">
             <i class="fa-solid fa-arrow-right-from-bracket"></i>
           </div>
         </div>
@@ -88,7 +157,7 @@ const AdminProduct = () => {
       <div className="AdminPage">
         <div className="AdminPageLeft">
           <div className="AdminLeftTitle">
-            <h5>TRANG QUẢN TRỊ</h5>
+            <h5 onClick={handleAdmin}>TRANG QUẢN TRỊ</h5>
           </div>
 
           <div className="AdminMenuHeader">
@@ -180,7 +249,11 @@ const AdminProduct = () => {
                     <p>{product?.name}</p>
                   </div>
                   <div className="PriceProduct">
-                    <p>{product?.price}đ</p>
+                    <p>
+                      {product?.price !== undefined
+                        ? `${product?.price.toLocaleString()}đ`
+                        : "Đang tải..."}
+                    </p>
                   </div>
                   <div className="QuantityProduct">
                     <p>{product?.quantity}</p>
@@ -206,7 +279,7 @@ const AdminProduct = () => {
                   </div>
                   <div className="DeleteProduct">
                     <i
-                      onClick={() => Delete(product.id)}
+                      onClick={() => openDeletePopup(product.id)}
                       className="fa-solid fa-trash"
                     ></i>
                   </div>
@@ -214,50 +287,20 @@ const AdminProduct = () => {
               </div>
             ))}
           </div>
-
-          {isDeleteOpen && (
-            <div className="delete-overlay">
-              <div className="delete">
-                <p>Bạn có chắc chắn muốn xoá sản phẩm này?</p>
-                <div className="ButtonDeleteProduct">
-                  <button onClick={closeDelete}>Không</button>
-                  <button>Chắc chắn</button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* <div className="ProductList">
-            <div className="IDProduct">
-              <p>16</p>
-            </div>
-            <div className="NameProduct">
-              <p>Áo EVOLVEMENT 26159</p>
-            </div>
-            <div className="PriceProduct">
-              <p>199.000đ</p>
-            </div>
-            <div className="QuantityProduct">
-              <p>30</p>
-            </div>
-            <div className="DesProduct">
-              <p>Đây là mô tả</p>
-            </div>
-            <div className="CategoryProduct">
-              <p>T-SHIRT</p>
-            </div>
-            <div className="ImageProduct">
-              <p>Hình ảnh</p>
-            </div>
-            <div className="EditProduct">
-              <i class="fa-regular fa-pen-to-square"></i>
-            </div>
-            <div className="DeleteProduct">
-              <i class="fa-solid fa-trash"></i>
-            </div>
-          </div> */}
         </div>
       </div>
+
+      {isDeleteOpen && (
+        <div className="delete-overlay">
+          <div className="delete">
+            <p>Bạn có chắc chắn muốn xoá sản phẩm này?</p>
+            <div className="ButtonDeleteProduct">
+              <button onClick={closeDeletePopup}>Không</button>
+              <button onClick={handleDeleteProduct}>Chắc chắn</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

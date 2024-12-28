@@ -23,7 +23,7 @@ const InfoAccount = () => {
 
   useEffect(() => {
     // Giả sử bạn có API để lấy thông tin người dùng
-    fetch(`http://192.168.10.226:8080/api/v1/users/${userId}`)
+    fetch(`http://192.168.10.164:8080/api/v1/users/${userId}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Không thể lấy thông tin người dùng");
@@ -58,7 +58,7 @@ const InfoAccount = () => {
     }
 
     const token = localStorage.getItem("token");
-    fetch(`http://192.168.10.226:8080/api/v1/users/deactivate/${userInfo.id}`, {
+    fetch(`http://192.168.10.164:8080/api/v1/users/deactivate/${userInfo.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

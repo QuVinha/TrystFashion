@@ -1,35 +1,12 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import "./AddCategory.css";
 import { useNavigate } from "react-router-dom";
 
 const AddCategory = () => {
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
-  const [products, setProducts] = useState([]);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch("http://192.168.10.226:8080/api/v1/products")
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Dữ liệu nhận được:", data);
-        if (Array.isArray(data)) {
-          setProducts(data);
-        } else if (data.products) {
-          setProducts(data.products);
-        } else {
-          setError("Không có dữ liệu sản phẩm");
-        }
-      })
-      .catch((error) => {
-        console.log("Lỗi khi tải sản phẩm:", error);
-        setError("Lỗi khi tải dữ liệu");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
+  const [categoryName, setCategoryName] = useState(""); // State để lưu tên danh mục
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const roleName = localStorage.getItem("roleName"); // Lấy roleName từ localStorage
@@ -38,6 +15,47 @@ const AddCategory = () => {
       setIsAdmin(true); // Nếu người dùng là admin và có token hợp lệ
     }
   }, []);
+
+  const handleAddCategory = async () => {
+    if (!isAdmin) {
+      alert("Bạn không có quyền thêm danh mục.");
+      return;
+    }
+
+    if (!categoryName.trim()) {
+      alert("Tên danh mục không được để trống.");
+      return;
+    }
+
+    try {
+      setLoading(true); // Bật trạng thái loading
+      const token = localStorage.getItem("token"); // Lấy token từ localStorage
+      const response = await fetch(
+        "http://192.168.10.164:8080/api/v1/categories",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Gửi token trong header
+          },
+          body: JSON.stringify({ name: categoryName.trim() }), // Gửi dữ liệu danh mục
+        }
+      );
+
+      if (response.ok) {
+        alert("Thêm danh mục thành công!");
+        navigate("/adminCategory");
+        setCategoryName(""); // Xóa input sau khi thêm thành công
+      } else {
+        alert("Thêm danh mục không thành công.");
+      }
+    } catch (error) {
+      console.error("Lỗi khi thêm danh mục:", error);
+      alert("Đã xảy ra lỗi. Vui lòng thử lại.");
+    } finally {
+      setLoading(false); // Tắt trạng thái loading
+    }
+  };
 
   const handleHome = () => {
     navigate("/");
@@ -62,6 +80,7 @@ const AddCategory = () => {
   const handleAdminCategory = () => {
     navigate("/adminCategory");
   };
+
   return (
     <div id="main">
       <div
@@ -73,12 +92,12 @@ const AddCategory = () => {
         className="HeaderAdmin"
       >
         <div className="LogoShopAdmin">
-          <h1 onClick={handleAdmin}>TRYST </h1>
+          <h1 onClick={handleAdmin}>TRYST</h1>
         </div>
 
         <div className="LogOutAdmin">
           <div onClick={handleHome} className="IconLogoutAdmin">
-            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <i className="fa-solid fa-arrow-right-from-bracket"></i>
           </div>
         </div>
       </div>
@@ -95,22 +114,22 @@ const AddCategory = () => {
 
           <div className="AdminMenu">
             <div onClick={handleAccountUser} className="NavAdminMenu1">
-              <i class="fa-solid fa-user"></i>
+              <i className="fa-solid fa-user"></i>
               <a>Quản lý tài khoản</a>
             </div>
 
             <div onClick={handleAdminProduct} className="NavAdminMenu2">
-              <i class="fa-solid fa-shirt"></i>
+              <i className="fa-solid fa-shirt"></i>
               <a>Quản lý sản phẩm</a>
             </div>
 
             <div onClick={handleAdminCategory} className="NavAdminMenu3">
-              <i class="fa-solid fa-list"></i>
+              <i className="fa-solid fa-list"></i>
               <a>Quản lý danh mục sản phẩm</a>
             </div>
 
             <div onClick={handleAdminOrder} className="NavAdminMenu4">
-              <i class="fa-solid fa-truck"></i>
+              <i className="fa-solid fa-truck"></i>
               <a>Quản lý đơn hàng</a>
             </div>
           </div>
@@ -127,30 +146,15 @@ const AddCategory = () => {
                 type="text"
                 placeholder="Tên Danh Mục Sản Phẩm"
                 name="name"
-                // value={productData.name}
-                // onChange={handleInputChange}
+                value={categoryName}
+                onChange={(e) => setCategoryName(e.target.value)} // Cập nhật tên danh mục
               />
             </div>
 
-            <div className="FormAddCategory">
-              <select
-              // name="category_id"
-              // onChange={handleInputChange}
-              // value={productData.category_id}
-              >
-                <option value="" disabled>
-                  Chọn sản phẩm
-                </option>
-                {products.map((product) => (
-                  <option key={product.id} value={product.id}>
-                    {product.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
             <div className="ButtonAddProduct">
-              <button>THÊM DANH MỤC SẢN PHẨM</button>
+              <button onClick={handleAddCategory} disabled={loading}>
+                {loading ? "Đang thêm..." : "THÊM DANH MỤC SẢN PHẨM"}
+              </button>
             </div>
           </div>
         </div>

@@ -3,10 +3,6 @@ import axios from "axios";
 import "./Product.css";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
-import FeatProducts1 from "../../../src/assets/img/featProducts/featPrd1.jpg";
-import FeatProducts2 from "../../../src/assets/img/featProducts/featPrd2.jpg";
-import FeatProducts3 from "../../../src/assets/img/featProducts/featPrd3.jpg";
-import FeatProducts4 from "../../../src/assets/img/featProducts/featPrd4.jpg";
 import { CartContext } from "../CartContext/CartContext";
 import { useNavigate } from "react-router-dom";
 
@@ -19,42 +15,58 @@ const Product = () => {
   const { addToCart } = useContext(CartContext);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [isAdmin, setIsAdmin] = useState(false);
   const [likedProducts, setLikedProducts] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [image, setImage] = useState(null);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null); // State để lưu category đã chọn
+  const [filteredProducts, setFilteredProducts] = useState(products);
 
-  const handleAdmin = () => {
-    navigate("/admin");
+  // Hàm lọc theo danh mục
+  const handleProductChange = (category) => {
+    setSelectedCategory(category); // Cập nhật category đã chọn
+    // Lọc sản phẩm theo category.name
+    const filtered = products.filter(
+      (product) => product.category.name === category.name
+    );
+    setFilteredProducts(filtered); // Lưu các sản phẩm lọc được vào state
   };
 
-  const handleBuyNow = (productId) => {
-    navigate("/pay", { state: { productId } });
-    window.scrollTo(0, 0);
+  // Hàm xử lý thay đổi giá
+  const handlePriceChange = (priceOrder) => {
+    setSelectedPrice(priceOrder); // Lưu giá trị chọn lọc theo giá (thấp đến cao / cao đến thấp)
   };
 
-  useEffect(() => {
-    const roleName = localStorage.getItem("roleName");
-    const token = localStorage.getItem("token");
-    if (roleName === "ADMIN" && token) {
-      setIsAdmin(true);
+  // Tính toán danh sách sản phẩm hiển thị
+  const productsToDisplay = () => {
+    let displayedProducts = selectedCategory ? filteredProducts : products;
+
+    // Lọc theo từ khóa tìm kiếm (nếu có)
+    if (searchTerm) {
+      displayedProducts = displayedProducts.filter((product) =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
     }
-  }, []);
 
-  const handleLikeClick = (productId) => {
-    // Kiểm tra xem sản phẩm đã được yêu thích chưa
-    if (likedProducts.includes(productId)) {
-      // Nếu đã yêu thích, bỏ yêu thích
-      setLikedProducts(likedProducts.filter((id) => id !== productId));
-    } else {
-      // Nếu chưa yêu thích, thêm vào danh sách yêu thích
-      setLikedProducts([...likedProducts, productId]);
+    // Sắp xếp theo giá nếu có lựa chọn sắp xếp giá
+    if (selectedPrice === "low-to-high") {
+      displayedProducts = [...displayedProducts].sort(
+        (a, b) => a.price - b.price
+      );
+    } else if (selectedPrice === "high-to-low") {
+      displayedProducts = [...displayedProducts].sort(
+        (a, b) => b.price - a.price
+      );
     }
+
+    return displayedProducts;
   };
 
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      console.log("Tìm kiếm:", searchTerm); // In ra từ khóa tìm kiếm khi nhấn Enter
+      handleSubmit({ preventDefault: () => {} }); // Gọi hàm handleSubmit để xử lý tìm kiếm
+    }
+  };
 
   const [productData, setProductData] = useState({
     name: "",
@@ -76,61 +88,6 @@ const Product = () => {
     }));
   };
 
-  // Gửi dữ liệu sản phẩm mới lên API
-  const handleAddProduct = async () => {
-    if (!isAdmin) {
-      alert("Bạn không có quyền thêm sản phẩm.");
-      return;
-    }
-
-    try {
-      const token = localStorage.getItem("token"); // Lấy token từ localStorage
-
-      const response = await fetch(
-        "http://192.168.10.226:8080/api/v1/products",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Gửi token trong header
-          },
-          body: JSON.stringify({
-            name: productData.name,
-            price: parseFloat(productData.price), // Đảm bảo giá trị giá là số
-            quantity: parseInt(productData.quantity, 10), // Đảm bảo số lượng là số nguyên
-            category_id: parseInt(productData.category_id, 10), // Đảm bảo category_id là số nguyên
-            color: productData.color,
-            code: productData.code,
-            color2: productData.color2,
-            description: productData.description,
-            url: "", // Nếu bạn có trường này, có thể thêm URL ở đây.
-          }),
-        }
-      );
-
-      if (response.ok) {
-        alert("Thêm sản phẩm thành công!");
-        // Reset form nếu cần
-        setProductData({
-          name: "",
-          category_id: "",
-          price: "",
-          quantity: "",
-          color: "",
-          color2: "",
-          code: "",
-          description: "",
-        });
-        setIsModalOpen(false); // Đóng modal sau khi thêm sản phẩm
-      } else {
-        alert("Có lỗi xảy ra, vui lòng thử lại.");
-      }
-    } catch (error) {
-      console.error("Lỗi khi gửi yêu cầu:", error);
-      alert("Có lỗi xảy ra, vui lòng thử lại.");
-    }
-  };
-
   const handleNavigate = (id) => {
     navigate("/details", { state: { id } });
     window.scrollTo(0, 0);
@@ -142,28 +99,27 @@ const Product = () => {
   };
 
   const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
+    const value = e.target.value;
+    setSearchTerm(value); // Cập nhật từ khóa tìm kiếm
+
+    // Lọc sản phẩm theo tên chứa từ khóa tìm kiếm
+    const filtered = products.filter((product) =>
+      product.name.toLowerCase().includes(value.toLowerCase())
+    );
+    setFilteredProducts(filtered); // Cập nhật state filteredProducts
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Tìm kiếm:", searchTerm);
+    e.preventDefault(); // Ngừng hành động mặc định của form
+    const filtered = products.filter((product) =>
+      product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredProducts(filtered); // Cập nhật danh sách sản phẩm đã lọc
   };
 
   const handleIconClick = () => {
-    console.log("Tìm kiếm:", searchTerm);
-
+    // Gọi hàm handleSubmit để xử lý tìm kiếm khi click vào biểu tượng
     handleSubmit({ preventDefault: () => {} });
-  };
-
-  const handleProductChange = (category) => {
-    setSelectedCategory(category);
-    console.log("Danh mục đã chọn: ", category);
-  };
-
-  const handlePriceChange = (price) => {
-    setSelectedPrice(price);
-    console.log("Giá đã chọn: ", price);
   };
 
   const handleImageChange = (event) => {
@@ -175,7 +131,28 @@ const Product = () => {
   };
 
   useEffect(() => {
-    fetch("http://192.168.10.226:8080/api/v1/products")
+    fetch("http://192.168.10.164:8080/api/v1/categories")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch categories");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Categories:", data);
+        setCategories(data);
+      })
+      .catch((err) => {
+        console.error("Error fetching categories:", err);
+        setError("Có lỗi khi tải dữ liệu");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetch("http://192.168.10.164:8080/api/v1/products")
       .then((res) => res.json())
       .then((data) => {
         console.log("Dữ liệu nhận được:", data);
@@ -195,6 +172,15 @@ const Product = () => {
         setLoading(false);
       });
   }, []);
+
+  // Sau các useEffect, xử lý điều kiện để hiển thị
+  if (loading) {
+    return <p>Đang tải dữ liệu...</p>;
+  }
+
+  if (error) {
+    return <p>{error}</p>;
+  }
 
   return (
     <div id="main">
@@ -221,6 +207,7 @@ const Product = () => {
                   placeholder="Tìm kiếm..."
                   value={searchTerm}
                   onChange={handleSearch}
+                  onKeyDown={handleKeyDown}
                   style={{
                     padding: "15px",
                     width: "100%",
@@ -252,48 +239,14 @@ const Product = () => {
                   </button>
                   <div className="DropdownContent">
                     <ul>
-                      <li
-                        onClick={() =>
-                          handleProductChange({ id: 1, name: "Jacket" })
-                        }
-                      >
-                        Jacket
-                      </li>
-                      <li
-                        onClick={() =>
-                          handleProductChange({ id: 2, name: "T-Shirt" })
-                        }
-                      >
-                        T-Shirt
-                      </li>
-                      <li
-                        onClick={() =>
-                          handleProductChange({ id: 3, name: "Jeans" })
-                        }
-                      >
-                        Jeans
-                      </li>
-                      <li
-                        onClick={() =>
-                          handleProductChange({ id: 4, name: "Baby-Tee" })
-                        }
-                      >
-                        Baby-Tee
-                      </li>
-                      <li
-                        onClick={() =>
-                          handleProductChange({ id: 5, name: "Tank-Top" })
-                        }
-                      >
-                        Tank-Top
-                      </li>
-                      <li
-                        onClick={() =>
-                          handleProductChange({ id: 6, name: "Sweater" })
-                        }
-                      >
-                        Sweater
-                      </li>
+                      {categories.map((category) => (
+                        <li
+                          key={category.id}
+                          onClick={() => handleProductChange(category)}
+                        >
+                          {category.name}
+                        </li>
+                      ))}
                     </ul>
                   </div>
                 </div>
@@ -315,156 +268,23 @@ const Product = () => {
                     </ul>
                   </div>
                 </div>
-
-                {/* {isAdmin && (
-                  <div className="IconEditDropdown">
-                    <i className="fa-regular fa-pen-to-square"></i>
-                  </div>
-                )} */}
-
-                <div onClick={handleAdmin} className="IconEditDropdown">
-                  <i className="fa-regular fa-pen-to-square"></i>
-                </div>
               </div>
             </div>
           </div>
-
-          {isAdmin && (
-            <div onClick={openModal} className="IconAddProduct">
-              <p>Thêm sản phẩm</p>
-              <i className="fa-solid fa-plus"></i>
-            </div>
-          )}
-
-          {/* <div onClick={openModal} className="IconAddProduct">
-            <p>Thêm sản phẩm</p>
-            <i className="fa-solid fa-plus"></i>
-          </div> */}
         </div>
-
-        {isModalOpen && (
-          <div className="modal-overlay">
-            <div className="modals">
-              <div className="modal-header">
-                <h5>THÊM SẢN PHẨM</h5>
-                <i onClick={closeModal} className="fa-solid fa-xmark"></i>
-              </div>
-
-              <div className="modal-body">
-                <div className="modal-body-flex">
-                  <input
-                    type="text"
-                    placeholder="Tên Sản Phẩm"
-                    name="name"
-                    value={productData.name}
-                    onChange={handleInputChange}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Danh Mục"
-                    name="category_id"
-                    value={productData.category_id}
-                    onChange={handleInputChange}
-                  />
-                </div>
-
-                <div className="modal-body-flex">
-                  <input
-                    type="number"
-                    placeholder="Đơn Giá"
-                    name="price"
-                    value={productData.price}
-                    onChange={handleInputChange}
-                  />
-                  <input
-                    type="number"
-                    placeholder="Số lượng"
-                    name="quantity"
-                    value={productData.quantity}
-                    onChange={handleInputChange}
-                  />
-                </div>
-
-                <div className="modal-body-flex">
-                  <input
-                    type="text"
-                    placeholder="Màu 1"
-                    name="color"
-                    value={productData.color}
-                    onChange={handleInputChange}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Màu 2"
-                    name="color2"
-                    value={productData.color2}
-                    onChange={handleInputChange}
-                  />
-                </div>
-
-                <p>Thêm hình ảnh sản phẩm</p>
-
-                <div className="modal-body-flex">
-                  <input
-                    type="text"
-                    placeholder="Mã sản phẩm"
-                    name="code"
-                    value={productData.code}
-                    onChange={handleInputChange}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Mô tả"
-                    name="description"
-                    value={productData.description}
-                    onChange={handleInputChange}
-                  />
-                </div>
-              </div>
-              <div className="modal-footer">
-                <button onClick={handleAddProduct} className="pay-btn">
-                  THÊM MỚI
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
 
         <div className="Product">
           <div className="ProductsList">
-            {products.map((product) => (
+            {productsToDisplay().map((product) => (
               <div key={product.id} className="ProductsContent">
-                <div className="ProductsImg">
+                <div
+                  onClick={() => handleNavigate(product.id)}
+                  className="ProductsImg"
+                >
                   <img
                     src={`data:image/jpeg;base64,${product.url}`}
                     alt={product.name}
                   />
-                  <div className="iconOverlay">
-                    <i
-                      onClick={() => handleNavigate(product.id)}
-                      className="fa-solid fa-magnifying-glass"
-                    ></i>
-                    <i
-                      onClick={() => {
-                        handleLikeClick(product.id);
-                        addToCart(product);
-                        alert("Thêm giỏ hàng thành công!");
-                      }}
-                      className={`fas fa-heart ${
-                        likedProducts.includes(product.id) ? "liked" : ""
-                      }`}
-                      style={{
-                        color: likedProducts.includes(product.id)
-                          ? "red"
-                          : "#999",
-                        cursor: "pointer",
-                      }}
-                    ></i>
-                    <i
-                      onClick={() => handleBuyNow(product.id)}
-                      className="fas fa-shopping-cart"
-                    ></i>
-                  </div>
                 </div>
                 <div className="ProductsBody">
                   <p className="ProductsName">{product.name}</p>
@@ -474,70 +294,6 @@ const Product = () => {
                 </div>
               </div>
             ))}
-          </div>
-        </div>
-
-        <div className="Product">
-          <div className="ProductsList">
-            <div className="ProductsContent">
-              <div className="ProductsImg">
-                <img src={FeatProducts1} />
-                <div className="iconOverlay">
-                  <i className="fa-solid fa-magnifying-glass"></i>
-                  <i className="fas fa-heart"></i>
-                  <i className="fas fa-shopping-cart"></i>
-                </div>
-              </div>
-              <div className="ProductsBody">
-                <p className="ProductsName">Áo Phông EVOLVEMENT 26159</p>
-                <p className="ProductsPrice">199.000đ</p>
-              </div>
-            </div>
-
-            <div className="ProductsContent">
-              <div className="ProductsImg">
-                <img src={FeatProducts2} />
-                <div className="iconOverlay">
-                  <i className="fa-solid fa-magnifying-glass"></i>
-                  <i className="fas fa-heart"></i>
-                  <i className="fas fa-shopping-cart"></i>
-                </div>
-              </div>
-              <div className="ProductsBody">
-                <p className="ProductsName">Áo thun SpickHead Black</p>
-                <p className="ProductsPrice">200.000đ</p>
-              </div>
-            </div>
-
-            <div className="ProductsContent">
-              <div className="ProductsImg">
-                <img src={FeatProducts3} />
-                <div className="iconOverlay">
-                  <i className="fa-solid fa-magnifying-glass"></i>
-                  <i className="fas fa-heart"></i>
-                  <i className="fas fa-shopping-cart"></i>
-                </div>
-              </div>
-              <div className="ProductsBody">
-                <p className="ProductsName">Áo thun SpickHead White</p>
-                <p className="ProductsPrice">185.000đ</p>
-              </div>
-            </div>
-
-            <div className="ProductsContent">
-              <div className="ProductsImg">
-                <img src={FeatProducts4} />
-                <div className="iconOverlay">
-                  <i className="fa-solid fa-magnifying-glass"></i>
-                  <i className="fas fa-heart"></i>
-                  <i className="fas fa-shopping-cart"></i>
-                </div>
-              </div>
-              <div className="ProductsBody">
-                <p className="ProductsName">Áo Phông Enonement YHT0574</p>
-                <p className="ProductsPrice">209.000đ</p>
-              </div>
-            </div>
           </div>
         </div>
       </div>

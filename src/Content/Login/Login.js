@@ -54,7 +54,7 @@ const Login = ({ setUserName }) => {
     if (!isValid) return;
 
     axios
-      .post("http://192.168.10.226:8080/api/v1/users/login", {
+      .post("http://192.168.10.164:8080/api/v1/users/login", {
         user_name: username,
         password: password,
       })
@@ -68,12 +68,10 @@ const Login = ({ setUserName }) => {
             // Giải mã token để lấy thông tin
             const decodedToken = jwtDecode(token);
             console.log("Decoded Token:", decodedToken); // Log token đã giải mã
-
             // Lưu token và các thông tin khác vào localStorage
             localStorage.setItem("token", token);
             localStorage.setItem("user_name", decodedToken.userName);
-            localStorage.setItem("full_name", decodedToken.fullName);
-            localStorage.setItem("phone_Number", decodedToken.phoneNumber);
+            localStorage.setItem("user_id", decodedToken.userId);
             localStorage.setItem(
               "roleName",
               decodedToken.roleName.toUpperCase()
@@ -97,7 +95,7 @@ const Login = ({ setUserName }) => {
       })
       .catch((err) => {
         console.error("Login error:", err);
-        setError("Đăng nhập thất bại, vui lòng thử lại sau.");
+        setError("Sai tên đăng nhập hoặc mật khẩu, vui lòng nhập lại. ");
       });
   };
 

@@ -8,6 +8,15 @@ const Header = ({ username }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [storedUsername, setStoredUsername] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const roleName = localStorage.getItem("roleName"); // Lấy roleName từ localStorage
+    const token = localStorage.getItem("token"); // Lấy token từ localStorage
+    if (roleName === "ADMIN" && token) {
+      setIsAdmin(true); // Nếu người dùng là admin và có token hợp lệ
+    }
+  }, []);
 
   useEffect(() => {
     // Lưu giá trị username vào local storage chỉ một lần khi component được render lần đầu tiên
@@ -62,16 +71,22 @@ const Header = ({ username }) => {
   // Xử lý đăng xuất
   const handleLogout = () => {
     localStorage.removeItem("user_name");
+    localStorage.removeItem("user_id");
     localStorage.removeItem("password");
     localStorage.removeItem("token");
     localStorage.removeItem("roleName");
+    localStorage.removeItem("cartItems");
     navigate("/login");
     window.scrollTo(0, 0);
   };
 
-  // Điều hướng đến trang thông tin tài khoản
   const handleAccountInfo = () => {
     navigate("/account");
+    window.scrollTo(0, 0);
+  };
+
+  const handleYourOrder = () => {
+    navigate("/yourOrder");
     window.scrollTo(0, 0);
   };
 
@@ -84,6 +99,18 @@ const Header = ({ username }) => {
           </div>
           <div className="NavBar">
             <ul>
+              {isAdmin && (
+                <li className="Nav0">
+                  <NavLink
+                    to="/admin"
+                    onClick={() => handleNavigation("/admin")}
+                    className={({ isActive }) => (isActive ? "active" : "")}
+                  >
+                    ADMIN DASHBOARD
+                  </NavLink>
+                </li>
+              )}
+
               <li className="Nav1">
                 <NavLink
                   to="/"
@@ -154,6 +181,7 @@ const Header = ({ username }) => {
                         >
                           Tài khoản
                         </p>
+                        <p onClick={handleYourOrder}>Đơn hàng</p>
                         <p onClick={handleLogout}>Đăng xuất</p>
                       </div>
                     )}

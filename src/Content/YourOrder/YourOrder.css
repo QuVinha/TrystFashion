@@ -1,0 +1,43 @@
+html {
+  font-family: "Roboto Condensed", sans-serif;
+}
+
+.YourOrder {
+  margin-bottom: 100px;
+}
+
+.YourOrderContent {
+  padding: 20px;
+  text-align: center;
+}
+
+.NavYO {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.TitleOrderDetails {
+  padding: 17px 10px 17px 10px;
+  display: grid;
+  text-align: center;
+  grid-template-columns: 25% 25% 25% 25%;
+  background-color: #eeeeee;
+}
+
+.ContentOrderDetails {
+  padding: 17px 10px 17px 10px;
+  display: grid;
+  text-align: center;
+  grid-template-columns: 25% 25% 25% 25%;
+}
+
+.ContentOrderDetails:hover {
+  cursor: pointer;
+  background-color: #555;
+}
+
+.OrderDetails {
+  height: 40vh;
+}

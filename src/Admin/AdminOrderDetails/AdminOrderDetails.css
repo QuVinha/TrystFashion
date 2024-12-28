@@ -1,0 +1,113 @@
+body,
+html {
+  font-family: "Roboto Condensed", sans-serif;
+}
+
+.ContentAdminOD {
+  display: flex;
+}
+
+.AdminODLeft {
+  width: 55%;
+  margin: 25px 20px 25px 20px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+}
+
+.AdminODRight {
+  width: 45%;
+  margin: 25px 20px 25px 20px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+}
+
+.ContentAdminODLeft {
+  padding: 30px;
+}
+
+.ContentAdminODRight {
+  padding: 20px;
+}
+
+.titleOD {
+  display: flex;
+}
+
+.titleOD1 {
+  width: 85%;
+}
+
+.titleOD2 {
+  width: 15%;
+}
+
+.titleOD p,
+.titleAddressOD p {
+  padding: 15px 10px;
+  margin-bottom: 5px;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.06);
+}
+
+.productOD,
+.totalPriceOD {
+  display: flex;
+  align-items: center;
+}
+
+.productOD p,
+.totalPriceOD p {
+  padding: 15px 10px;
+}
+
+.nameProductOD,
+.nameTotalPriceOD {
+  width: 85%;
+}
+
+.priceProductOD,
+.priceTotalPriceOD {
+  width: 15%;
+}
+
+.nameProductOD {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.nameProductOD p,
+.priceProductOD p {
+  color: #ee0000;
+}
+
+.addressOD,
+.OD {
+  display: flex;
+  align-items: center;
+}
+
+.addressOD p,
+.OD p {
+  padding: 15px;
+}
+
+.addressOD1 p,
+.nameTotalPriceOD p,
+.OD1 p {
+  font-weight: 500;
+}
+
+.addressOD2 p,
+.priceTotalPriceOD p,
+.OD2 p {
+  color: #555555;
+}
+
+.addressOD1 {
+  width: 25%;
+}
+
+.OD1 {
+  width: 50%;
+}

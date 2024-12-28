@@ -28,6 +28,17 @@ const Admin = () => {
   const handleAdminCategory = () => {
     navigate("/adminCategory");
   };
+
+  const handleLogoutAdmin = () => {
+    localStorage.removeItem("user_name");
+    localStorage.removeItem("password");
+    localStorage.removeItem("token");
+    localStorage.removeItem("roleName");
+    localStorage.removeItem("cartItems");
+    navigate("/login");
+    window.scrollTo(0, 0);
+  };
+
   return (
     <div id="main">
       <div
@@ -39,11 +50,11 @@ const Admin = () => {
         className="HeaderAdmin"
       >
         <div className="LogoShopAdmin">
-          <h1 onClick={handleAdmin}>TRYST </h1>
+          <h1 onClick={handleHome}>TRYST </h1>
         </div>
 
         <div className="LogOutAdmin">
-          <div onClick={handleHome} className="IconLogoutAdmin">
+          <div onClick={handleLogoutAdmin} className="IconLogoutAdmin">
             <i class="fa-solid fa-arrow-right-from-bracket"></i>
           </div>
         </div>
@@ -52,7 +63,7 @@ const Admin = () => {
       <div className="AdminPage">
         <div className="AdminPageLeft">
           <div className="AdminLeftTitle">
-            <h5>TRANG QUẢN TRỊ</h5>
+            <h5 onClick={handleAdmin}>TRANG QUẢN TRỊ</h5>
           </div>
 
           <div className="AdminMenuHeader">

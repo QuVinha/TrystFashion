@@ -7,7 +7,6 @@ import emailjs from "@emailjs/browser";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import AoJacket from "../../../src/assets/img/featProducts/1.png";
 import BG2HomePage from "../../../src/assets/img/BGHomepage/BGR2-Homepage.jpg";
 import BG1HomePage from "../../../src/assets/img/BGHomepage/BGhome.jpg";
 import Thy from "../../../src/assets/img/BGHomepage/thy.jpg";
@@ -25,9 +24,6 @@ import vidHome from "../../../src/assets/img/VideoHome.mp4";
 import { CartContext } from "../CartContext/CartContext";
 
 const HomePage = () => {
-  const [count, setCount] = useState(1);
-  const [selectedColor, setSelectedColor] = useState(null);
-  const [selectedSize, setSelectedSize] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
   const [products, setProducts] = useState([]);
@@ -36,20 +32,78 @@ const HomePage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { addToCart } = useContext(CartContext);
+  const [count, setCount] = useState(1);
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedSize, setSelectedSize] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handleDetails = () => {
-    navigate("/details");
-    window.scrollTo(0, 0);
+  const handleColorClick = (color) => {
+    setSelectedColor(color);
+    setErrorMessage("");
+  };
+
+  const handleSizeClick = (size) => {
+    setSelectedSize((prevSize) => (prevSize === size ? null : size));
+    setErrorMessage("");
+  };
+
+  const handleAddToCart = () => {
+    let isValid = true;
+
+    // Kiểm tra nếu size, màu sắc hoặc số lượng chưa được chọn
+    if (!selectedSize && !selectedColor) {
+      setErrorMessage("Vui lòng chọn size và màu sắc");
+      isValid = false;
+    } else if (!selectedSize) {
+      setErrorMessage("Vui lòng chọn size");
+      isValid = false;
+    } else if (!selectedColor) {
+      setErrorMessage("Vui lòng chọn màu sắc");
+      isValid = false;
+    } else if (count < 1) {
+      setErrorMessage("Vui lòng chọn số lượng hợp lệ");
+      isValid = false;
+    }
+
+    // Nếu tất cả các lựa chọn hợp lệ, thêm sản phẩm vào giỏ hàng
+    if (isValid) {
+      const productWithOptions = {
+        ...products1, // Giả sử products1 là thông tin sản phẩm
+        size: selectedSize,
+        color: selectedColor,
+        quantity: count,
+      };
+
+      addToCart(productWithOptions);
+      alert("Thêm vào giỏ hàng thành công!");
+    }
   };
 
   const handleBuyNow = (productId) => {
-    navigate("/pay", { state: { productId } });
-    window.scrollTo(0, 0);
-  };
+    let isValid = true;
 
-  const handleNavigatePay = (id) => {
-    navigate("/pay", { state: { id } });
-    window.scrollTo(0, 0);
+    // Kiểm tra nếu size, màu sắc hoặc số lượng chưa được chọn
+    if (!selectedSize && !selectedColor) {
+      setErrorMessage("Vui lòng chọn size và màu sắc");
+      isValid = false;
+    } else if (!selectedSize) {
+      setErrorMessage("Vui lòng chọn size");
+      isValid = false;
+    } else if (!selectedColor) {
+      setErrorMessage("Vui lòng chọn màu sắc");
+      isValid = false;
+    } else if (count < 1) {
+      setErrorMessage("Vui lòng chọn số lượng hợp lệ");
+      isValid = false;
+    }
+
+    // Nếu tất cả các lựa chọn hợp lệ, chuyển đến trang thanh toán
+    if (isValid) {
+      navigate("/pay", {
+        state: { productId, selectedSize, selectedColor, count },
+      });
+      window.scrollTo(0, 0);
+    }
   };
 
   const Up = () => {
@@ -62,14 +116,6 @@ const HomePage = () => {
     if (count > 1) {
       setCount(count - 1);
     }
-  };
-
-  const handleColorClick = (color) => {
-    setSelectedColor((prevColor) => (prevColor === color ? null : color));
-  };
-
-  const handleSizeClick = (size) => {
-    setSelectedSize((prevSize) => (prevSize === size ? null : size));
   };
 
   useEffect(() => {
@@ -177,7 +223,7 @@ const HomePage = () => {
   const images = [Thy, Thy1, Thy2];
 
   useEffect(() => {
-    fetch("http://192.168.10.226:8080/api/v1/products/6")
+    fetch("http://192.168.10.164:8080/api/v1/products/6")
       .then((res) => res.json())
       .then((data) => {
         console.log("Received data:", data);
@@ -197,7 +243,7 @@ const HomePage = () => {
   }, []);
 
   useEffect(() => {
-    fetch("http://192.168.10.226:8080/api/v1/products/17")
+    fetch("http://192.168.10.164:8080/api/v1/products/17")
       .then((res) => res.json())
       .then((data) => {
         console.log("Received data:", data);
@@ -217,14 +263,22 @@ const HomePage = () => {
   }, []);
 
   useEffect(() => {
-    fetch("http://192.168.10.226:8080/api/v1/products")
+    fetch("http://192.168.10.164:8080/api/v1/products")
       .then((res) => res.json())
       .then((data) => {
         console.log("Dữ liệu nhận được:", data);
         if (Array.isArray(data)) {
-          setProducts(data);
+          // Randomly select 4 products
+          const randomProducts = data
+            .sort(() => 0.5 - Math.random())
+            .slice(0, 4);
+          setProducts(randomProducts);
         } else if (data.products) {
-          setProducts(data.products);
+          // Randomly select 4 products from the products array
+          const randomProducts = data.products
+            .sort(() => 0.5 - Math.random())
+            .slice(0, 4);
+          setProducts(randomProducts);
         } else {
           setError("Không có dữ liệu sản phẩm");
         }
@@ -344,20 +398,10 @@ const HomePage = () => {
                 <div className="productWC5">
                   <div className="productWC5Img">
                     <img
+                      onClick={() => handleNavigate(products1?.id)}
                       src={`data:image/jpeg;base64,${products1?.url}`}
                       alt={products1?.name}
                     />
-                    <div className="iconOverlay2">
-                      <i
-                        onClick={() => handleNavigate(products1?.id)}
-                        class="fa-solid fa-magnifying-glass"
-                      ></i>
-                      <i className="fas fa-heart"></i>
-                      <i
-                        onClick={() => handleNavigatePay(products1?.id)}
-                        className="fas fa-shopping-cart"
-                      ></i>
-                    </div>
                   </div>
                   <div className="productWC5Content">
                     <p className="productWC5name">{products1?.name}</p>
@@ -432,13 +476,7 @@ const HomePage = () => {
 
                     <div className="productWC5Buy">
                       <div className="productWC5BtnBuy">
-                        <button
-                          onClick={() => {
-                            addToCart(products1);
-                            alert("Thêm giỏ hàng thành công!");
-                          }}
-                          className="btnAdd"
-                        >
+                        <button onClick={handleAddToCart} className="btnAdd">
                           Thêm Vào Giỏ Hàng
                         </button>
                         <button
@@ -548,69 +586,23 @@ const HomePage = () => {
               </div>
 
               <div className="featProductsList">
-                <div className="featProductsContent">
-                  <div className="featProductsImg">
-                    <img src={FeatProducts1} alt="" />
-                    <div className="iconOverlay">
-                      <i class="fa-solid fa-magnifying-glass"></i>
-                      <i className="fas fa-heart"></i>
-                      <i className="fas fa-shopping-cart"></i>
+                {products.map((product, index) => (
+                  <div key={index} className="featProductsContent">
+                    <div className="featProductsImg">
+                      <img
+                        onClick={() => handleNavigate(product.id)}
+                        src={`data:image/jpeg;base64,${product.url}`}
+                        alt={product.name}
+                      />
+                    </div>
+                    <div className="featProductsBody">
+                      <p className="featProductsName">{product.name}</p>
+                      <p className="featProductsPrice">
+                        {product.price.toLocaleString()} đ
+                      </p>
                     </div>
                   </div>
-                  <div className="featProductsBody">
-                    <p className="featProductsName">
-                      Áo Phông EVOLVEMENT 26159
-                    </p>
-                    <p className="featProductsPrice">390.000đ</p>
-                  </div>
-                </div>
-
-                <div className="featProductsContent">
-                  <div className="featProductsImg">
-                    <img src={FeatProducts2} alt="" />
-                    <div className="iconOverlay">
-                      <i class="fa-solid fa-magnifying-glass"></i>
-                      <i className="fas fa-heart"></i>
-                      <i className="fas fa-shopping-cart"></i>
-                    </div>
-                  </div>
-                  <div className="featProductsBody">
-                    <p className="featProductsName">Áo SpickHead đen</p>
-                    <p className="featProductsPrice">460.000đ</p>
-                  </div>
-                </div>
-
-                <div className="featProductsContent">
-                  <div className="featProductsImg">
-                    <img src={FeatProducts3} alt="" />
-                    <div className="iconOverlay">
-                      <i class="fa-solid fa-magnifying-glass"></i>
-                      <i className="fas fa-heart"></i>
-                      <i className="fas fa-shopping-cart"></i>
-                    </div>
-                  </div>
-                  <div className="featProductsBody">
-                    <p className="featProductsName">Áo SpickHead xám</p>
-                    <p className="featProductsPrice">450.000đ</p>
-                  </div>
-                </div>
-
-                <div className="featProductsContent">
-                  <div className="featProductsImg">
-                    <img src={FeatProducts4} alt="" />
-                    <div className="iconOverlay">
-                      <i class="fa-solid fa-magnifying-glass"></i>
-                      <i className="fas fa-heart"></i>
-                      <i className="fas fa-shopping-cart"></i>
-                    </div>
-                  </div>
-                  <div className="featProductsBody">
-                    <p className="featProductsName">
-                      Áo Phông EVOLVEMENT 26173
-                    </p>
-                    <p className="featProductsPrice">350.000đ</p>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>

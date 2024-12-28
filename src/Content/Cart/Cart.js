@@ -1,5 +1,5 @@
 // src/components/Cart/Cart.js
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import "./Cart.css";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
@@ -7,8 +7,17 @@ import { useNavigate } from "react-router-dom";
 import { CartContext } from "../CartContext/CartContext";
 
 const Cart = () => {
-  const { cartItems, removeFromCart, updateQuantity } = useContext(CartContext);
+  const { cartItems, removeFromCart, updateQuantity, clearCart } =
+    useContext(CartContext);
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    if (!token) {
+      // Nếu không có token, làm trống giỏ hàng
+      clearCart();
+    }
+  }, [token, clearCart]);
 
   const calculateTotalItems = () => {
     return cartItems.reduce((total, item) => total + item.quantity, 0);
@@ -18,6 +27,7 @@ const Cart = () => {
     navigate("/pay", { state: { cartItems } });
     window.scrollTo(0, 0);
   };
+
   const handleBuyContinue = () => {
     navigate("/product");
     window.scrollTo(0, 0);
@@ -61,41 +71,45 @@ const Cart = () => {
 
         <div className="CartContent">
           <div className="CartContentLeft">
-            {cartItems.map((item) => (
-              <div key={item.id} className="CartProduct">
-                <div className="CartProductImg">
-                  <img
-                    src={`data:image/jpeg;base64,${item.url}`}
-                    alt={item.name}
-                  />
-                </div>
-                <div className="CartProductName">
-                  <h5>{item.name}</h5>
-                  <p>Màu: {item.color || "N/A"}</p>
-                  <p>Size: {item.size || "N/A"}</p>
-                </div>
-                <div className="CartProductPrice">
-                  <p>{item.price.toLocaleString()} đ</p>
-                </div>
-                <div className="CartProductQuantity">
-                  <div className="CartQuantity">
-                    <button onClick={() => handleQuantityChange(item.id, -1)}>
-                      -
-                    </button>
-                    <p className="numCartQuantity">{item.quantity}</p>
-                    <button onClick={() => handleQuantityChange(item.id, 1)}>
-                      +
-                    </button>
+            {cartItems.length === 0 ? (
+              <p>Giỏ hàng của bạn đang trống.</p>
+            ) : (
+              cartItems.map((item) => (
+                <div key={item.id} className="CartProduct">
+                  <div className="CartProductImg">
+                    <img
+                      src={`data:image/jpeg;base64,${item.url}`}
+                      alt={item.name}
+                    />
                   </div>
-                </div>
+                  <div className="CartProductName">
+                    <h5>{item.name}</h5>
+                    <p>Màu: {item.color || "N/A"}</p>
+                    <p>Size: {item.size || "N/A"}</p>
+                  </div>
+                  <div className="CartProductPrice">
+                    <p>{item.price.toLocaleString()} đ</p>
+                  </div>
+                  <div className="CartProductQuantity">
+                    <div className="CartQuantity">
+                      <button onClick={() => handleQuantityChange(item.id, -1)}>
+                        -
+                      </button>
+                      <p className="numCartQuantity">{item.quantity}</p>
+                      <button onClick={() => handleQuantityChange(item.id, 1)}>
+                        +
+                      </button>
+                    </div>
+                  </div>
 
-                <i
-                  style={{ cursor: "pointer" }}
-                  onClick={() => removeFromCart(item.id)}
-                  className="fa-solid fa-trash"
-                ></i>
-              </div>
-            ))}
+                  <i
+                    style={{ cursor: "pointer" }}
+                    onClick={() => removeFromCart(item.id)}
+                    className="fa-solid fa-trash"
+                  ></i>
+                </div>
+              ))
+            )}
           </div>
 
           <div className="CartContentRight">
