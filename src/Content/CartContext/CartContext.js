@@ -1,8 +1,6 @@
 // src/context/CartContext/CartContext.js
 import React, { createContext, useState, useEffect } from "react";
-
 export const CartContext = createContext();
-
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
   const token = localStorage.getItem("token");

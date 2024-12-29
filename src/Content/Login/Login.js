@@ -54,21 +54,32 @@ const Login = ({ setUserName }) => {
     if (!isValid) return;
 
     axios
-      .post("http://192.168.10.164:8080/api/v1/users/login", {
+      .post("http://192.168.1.45:8080/api/v1/users/login", {
         user_name: username,
         password: password,
       })
       .then((response) => {
         console.log("Response data:", response.data);
 
-        // Kiểm tra nếu response chứa một JWT token hợp lệ
         const token = response.data; // Vì token là toàn bộ response.data
         if (token && typeof token === "string") {
           try {
-            // Giải mã token để lấy thông tin
             const decodedToken = jwtDecode(token);
-            console.log("Decoded Token:", decodedToken); // Log token đã giải mã
-            // Lưu token và các thông tin khác vào localStorage
+            console.log("Decoded Token:", decodedToken);
+
+            if (decodedToken.active === false) {
+              alert("Tài khoản của bạn đã bị vô hiệu hoá");
+              // Xóa thông tin trong localStorage để đăng xuất
+              localStorage.removeItem("token");
+              localStorage.removeItem("user_name");
+              localStorage.removeItem("user_id");
+              localStorage.removeItem("roleName");
+              // Điều hướng về trang đăng nhập
+              navigate("/login");
+              return;
+            }
+
+            // Lưu token và thông tin khác vào localStorage
             localStorage.setItem("token", token);
             localStorage.setItem("user_name", decodedToken.userName);
             localStorage.setItem("user_id", decodedToken.userId);

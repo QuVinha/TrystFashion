@@ -10,60 +10,15 @@ const AdminOrderDetails = () => {
   const [order2, setOrders2] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    fetch(`http://192.168.10.164:8080/api/v1/orders/${id}`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch order");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Đơn hàng:", data);
-        setOrders1(data);
-      })
-      .catch((err) => {
-        setError("Có lỗi khi tải dữ liệu");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    const roleName = localStorage.getItem("roleName");
+    const token = localStorage.getItem("token");
+    if (roleName === "ADMIN" && token) {
+      setIsAdmin(true);
+    }
   }, []);
-
-  useEffect(() => {
-    const fetchOrderDetails = async () => {
-      try {
-        const token = localStorage.getItem("token");
-
-        const response = await fetch(
-          `http://192.168.10.164:8080/api/v1/order_details/order/${id}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`, // Gửi token trong header
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch order details");
-        }
-
-        const data = await response.json();
-        console.log("Chi tiết đơn hàng:", data);
-        setOrders2(data);
-      } catch (error) {
-        console.error(error);
-        setError("Có lỗi khi tải dữ liệu");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchOrderDetails();
-  }, [id]);
 
   const handleHome = () => {
     navigate("/");
@@ -99,6 +54,104 @@ const AdminOrderDetails = () => {
     window.scrollTo(0, 0);
   };
 
+  const shippingFee = order1?.payment_shipping === "fast" ? 35000 : 25000;
+  const subTotal = order1?.total_money ? order1.total_money - shippingFee : 0;
+
+  const handleAcceptOrder = () => {
+    if (!isAdmin) {
+      alert("Bạn không có quyền để thực hiện thao tác này");
+      return; // Không thực hiện thao tác nếu không phải admin
+    }
+
+    const token = localStorage.getItem("token");
+    fetch(`http://192.168.1.45:8080/api/v1/orders/confirm/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // Đảm bảo gửi token trong header
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return response.text(); // Trả về dữ liệu dạng text nếu có lỗi
+        }
+        return response.json(); // Nếu thành công, parse dữ liệu dạng JSON
+      })
+      .then((data) => {
+        if (typeof data === "string") {
+          // Nếu dữ liệu trả về là một chuỗi thông báo (ví dụ: thông báo lỗi)
+          console.log("Thông báo lỗi từ API:", data);
+          alert(data); // Hiển thị thông báo lỗi
+        } else {
+          // Nếu dữ liệu trả về là JSON
+          if (data.is_active === false) {
+            alert("Đã xảy ra lỗi khi vô hiệu hóa đơn hàng");
+          } else {
+            alert("Đơn hàng đã bị huỷ");
+            window.location.reload();
+          }
+        }
+      })
+      .catch((error) => {
+        alert("Đơn hàng đã được chấp nhận");
+        window.location.reload();
+      });
+  };
+
+  useEffect(() => {
+    fetch(`http://192.168.1.45:8080/api/v1/orders/${id}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch order");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Đơn hàng:", data);
+        setOrders1(data);
+      })
+      .catch((err) => {
+        setError("Có lỗi khi tải dữ liệu");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    const fetchOrderDetails = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        const response = await fetch(
+          `http://192.168.1.45:8080/api/v1/order_details/order/${id}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch order details");
+        }
+
+        const data = await response.json();
+        console.log("Chi tiết đơn hàng:", data);
+        setOrders2(data);
+      } catch (error) {
+        console.error(error);
+        setError("Có lỗi khi tải dữ liệu");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrderDetails();
+  }, [id]);
+
   return (
     <div id="main">
       <div
@@ -115,7 +168,7 @@ const AdminOrderDetails = () => {
 
         <div className="LogOutAdmin">
           <div onClick={handleLogoutAdmin} className="IconLogoutAdmin">
-            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <i className="fa-solid fa-arrow-right-from-bracket"></i>
           </div>
         </div>
       </div>
@@ -132,22 +185,22 @@ const AdminOrderDetails = () => {
 
           <div className="AdminMenu">
             <div onClick={handleAccountUser} className="NavAdminMenu1">
-              <i class="fa-solid fa-user"></i>
+              <i className="fa-solid fa-user"></i>
               <a>Quản lý tài khoản</a>
             </div>
 
             <div onClick={handleAdminProduct} className="NavAdminMenu2">
-              <i class="fa-solid fa-shirt"></i>
+              <i className="fa-solid fa-shirt"></i>
               <a>Quản lý sản phẩm</a>
             </div>
 
             <div onClick={handleAdminCategory} className="NavAdminMenu3">
-              <i class="fa-solid fa-list"></i>
+              <i className="fa-solid fa-list"></i>
               <a>Quản lý danh mục sản phẩm</a>
             </div>
 
             <div onClick={handleAdminOrder} className="NavAdminMenu4">
-              <i class="fa-solid fa-truck"></i>
+              <i className="fa-solid fa-truck"></i>
               <a>Quản lý đơn hàng</a>
             </div>
           </div>
@@ -192,7 +245,11 @@ const AdminOrderDetails = () => {
                     <p>Tạm tính </p>
                   </div>
                   <div className="priceTotalPriceOD">
-                    <p>599.000đ</p>
+                    <p>
+                      {subTotal !== 0
+                        ? `${subTotal.toLocaleString()}đ`
+                        : "Đang tải..."}
+                    </p>
                   </div>
                 </div>
 
@@ -201,7 +258,7 @@ const AdminOrderDetails = () => {
                     <p>Phí vận chuyển </p>
                   </div>
                   <div className="priceTotalPriceOD">
-                    <p>25.000đ</p>
+                    <p>{`${shippingFee.toLocaleString()}đ`}</p>
                   </div>
                 </div>
 
@@ -361,6 +418,10 @@ const AdminOrderDetails = () => {
                   <div className="OD2">
                     <p>{order1?.status}</p>
                   </div>
+                </div>
+
+                <div className="ButtonAcceptOrder">
+                  <button onClick={handleAcceptOrder}>Xác nhận đơn hàng</button>
                 </div>
               </div>
             </div>

@@ -10,25 +10,6 @@ const AdminCategory = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    fetch("http://192.168.10.164:8080/api/v1/categories")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch categories");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setCategories(data);
-      })
-      .catch((err) => {
-        setError("Có lỗi khi tải dữ liệu");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
-
   const handleHome = () => {
     navigate("/");
   };
@@ -83,13 +64,33 @@ const AdminCategory = () => {
     setIsDeleteOpen(false);
   };
 
+  useEffect(() => {
+    fetch("http://192.168.1.45:8080/api/v1/categories")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch categories");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Danh mục sản phẩm:", data);
+        setCategories(data);
+      })
+      .catch((err) => {
+        setError("Có lỗi khi tải dữ liệu");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
   // Hàm xóa danh mục
   const handleDeleteCategory = async () => {
     try {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        `http://192.168.10.164:8080/api/v1/categories/${deleteCategoryId}`,
+        `http://192.168.1.45:8080/api/v1/categories/${deleteCategoryId}`,
         {
           method: "DELETE",
           headers: {

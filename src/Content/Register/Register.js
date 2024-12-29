@@ -130,7 +130,7 @@ const Register = () => {
 
     try {
       const response = await axios.post(
-        "http://192.168.10.164:8080/api/v1/users/register",
+        "http://192.168.1.45:8080/api/v1/users/register",
         userData
       );
       alert("Đăng ký thành công");
@@ -138,7 +138,20 @@ const Register = () => {
 
       console.log("Registration successful:", response.data);
     } catch (error) {
-      console.error("Registration failed:", error.response?.data || error);
+      if (error.response && error.response.status === 400) {
+        // Assuming the backend returns a 400 status for duplicate usernames
+        if (
+          error.response.data.message &&
+          error.response.data.message.includes("Tên tài khoản đã tồn tại")
+        ) {
+          alert("Tên đăng nhập đã có người sử dụng");
+        } else {
+          alert("Tên đăng nhập đã có người sử dụng");
+        }
+      } else {
+        console.error("Registration failed:", error.response?.data || error);
+        alert("Đã xảy ra lỗi. Vui lòng thử lại sau.");
+      }
     }
   };
 

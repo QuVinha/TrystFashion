@@ -10,6 +10,24 @@ const Header = ({ username }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
+  const handleMouseEnter = () => {
+    setShowDropdown(true);
+  };
+
+  const handleMouseLeave = () => {
+    setShowDropdown(false);
+  };
+
+  const handleAccountInfo = () => {
+    navigate("/account");
+    window.scrollTo(0, 0);
+  };
+
+  const handleYourOrder = () => {
+    navigate("/yourOrder");
+    window.scrollTo(0, 0);
+  };
+
   useEffect(() => {
     const roleName = localStorage.getItem("roleName"); // Lấy roleName từ localStorage
     const token = localStorage.getItem("token"); // Lấy token từ localStorage
@@ -60,14 +78,6 @@ const Header = ({ username }) => {
     };
   }, []);
 
-  const handleMouseEnter = () => {
-    setShowDropdown(true);
-  };
-
-  const handleMouseLeave = () => {
-    setShowDropdown(false);
-  };
-
   // Xử lý đăng xuất
   const handleLogout = () => {
     localStorage.removeItem("user_name");
@@ -77,16 +87,6 @@ const Header = ({ username }) => {
     localStorage.removeItem("roleName");
     localStorage.removeItem("cartItems");
     navigate("/login");
-    window.scrollTo(0, 0);
-  };
-
-  const handleAccountInfo = () => {
-    navigate("/account");
-    window.scrollTo(0, 0);
-  };
-
-  const handleYourOrder = () => {
-    navigate("/yourOrder");
     window.scrollTo(0, 0);
   };
 

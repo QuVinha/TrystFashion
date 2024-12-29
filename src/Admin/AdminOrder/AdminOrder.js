@@ -7,6 +7,14 @@ const AdminOrder = () => {
   const [order, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const closeDelete = () => setIsDeleteOpen(false);
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const Delete = (id) => {
+    setSelectedOrderId(id);
+    setIsDeleteOpen(true); // Hiển thị overlay
+  };
 
   const handleOrderDetails = (orderId) => {
     navigate("/adminOrderDetails", { state: { id: orderId } });
@@ -47,7 +55,57 @@ const AdminOrder = () => {
   };
 
   useEffect(() => {
-    fetch("http://192.168.10.164:8080/api/v1/orders")
+    const roleName = localStorage.getItem("roleName");
+    const token = localStorage.getItem("token");
+    if (roleName === "ADMIN" && token) {
+      setIsAdmin(true);
+    }
+  }, []);
+
+  const handleDeleteOrder = () => {
+    if (!isAdmin) {
+      alert("Bạn không có quyền để thực hiện thao tác này");
+      return; // Không thực hiện thao tác nếu không phải admin
+    }
+
+    const token = localStorage.getItem("token");
+    fetch(`http://192.168.1.45:8080/api/v1/orders/disable/${selectedOrderId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // Đảm bảo gửi token trong header
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return response.text(); // Trả về dữ liệu dạng text nếu có lỗi
+        }
+        return response.json(); // Nếu thành công, parse dữ liệu dạng JSON
+      })
+      .then((data) => {
+        if (typeof data === "string") {
+          // Nếu dữ liệu trả về là một chuỗi thông báo (ví dụ: thông báo lỗi)
+          console.log("Thông báo lỗi từ API:", data);
+          alert(data); // Hiển thị thông báo lỗi
+        } else {
+          // Nếu dữ liệu trả về là JSON
+          if (data.is_active === false) {
+            alert("Đã xảy ra lỗi khi vô hiệu hóa đơn hàng");
+          } else {
+            alert("Đơn hàng đã bị huỷ");
+            window.location.reload();
+          }
+        }
+      })
+      .catch((error) => {
+        console.error("Lỗi khi vô hiệu hóa tài khoản:", error);
+        alert("Đơn hàng đã bị huỷ");
+        window.location.reload();
+      });
+  };
+
+  useEffect(() => {
+    fetch("http://192.168.1.45:8080/api/v1/orders")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch order");
@@ -193,12 +251,27 @@ const AdminOrder = () => {
                     ></i>
                   </div>
                   <div className="OrderDisable">
-                    <i className="fa-solid fa-ban"></i>
+                    <i
+                      onClick={() => Delete(order?.id)}
+                      className="fa-solid fa-ban"
+                    ></i>
                   </div>
                 </div>
               </div>
             ))}
           </div>
+
+          {isDeleteOpen && (
+            <div className="delete-overlay">
+              <div className="delete">
+                <p>Bạn có chắc chắn muốn huỷ đơn hàng này?</p>
+                <div className="ButtonDeleteUser">
+                  <button onClick={closeDelete}>Không</button>
+                  <button onClick={handleDeleteOrder}>Chắc chắn</button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

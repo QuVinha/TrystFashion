@@ -9,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 const Product = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
-  const [selectedProduct, setSelectedProduct] = useState("");
   const [selectedPrice, setSelectedPrice] = useState("");
   const [products, setProducts] = useState([]);
   const { addToCart } = useContext(CartContext);
@@ -20,6 +19,11 @@ const Product = () => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null); // State để lưu category đã chọn
   const [filteredProducts, setFilteredProducts] = useState(products);
+
+  const handleNavigate = (id) => {
+    navigate("/details", { state: { id } });
+    window.scrollTo(0, 0);
+  };
 
   // Hàm lọc theo danh mục
   const handleProductChange = (category) => {
@@ -61,43 +65,6 @@ const Product = () => {
     return displayedProducts;
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      console.log("Tìm kiếm:", searchTerm); // In ra từ khóa tìm kiếm khi nhấn Enter
-      handleSubmit({ preventDefault: () => {} }); // Gọi hàm handleSubmit để xử lý tìm kiếm
-    }
-  };
-
-  const [productData, setProductData] = useState({
-    name: "",
-    category_id: "",
-    price: "",
-    quantity: "",
-    color: "",
-    color2: "",
-    code: "",
-    description: "",
-  });
-
-  // Hàm xử lý thay đổi input
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setProductData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-
-  const handleNavigate = (id) => {
-    navigate("/details", { state: { id } });
-    window.scrollTo(0, 0);
-  };
-
-  const navigateAddProduct = () => {
-    navigate("/addProduct");
-    window.scrollTo(0, 0);
-  };
-
   const handleSearch = (e) => {
     const value = e.target.value;
     setSearchTerm(value); // Cập nhật từ khóa tìm kiếm
@@ -130,8 +97,9 @@ const Product = () => {
     }
   };
 
+  //API Category
   useEffect(() => {
-    fetch("http://192.168.10.164:8080/api/v1/categories")
+    fetch("http://192.168.1.45:8080/api/v1/categories")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch categories");
@@ -151,8 +119,9 @@ const Product = () => {
       });
   }, []);
 
+  //API Product
   useEffect(() => {
-    fetch("http://192.168.10.164:8080/api/v1/products")
+    fetch("http://192.168.1.45:8080/api/v1/products")
       .then((res) => res.json())
       .then((data) => {
         console.log("Dữ liệu nhận được:", data);
@@ -207,7 +176,6 @@ const Product = () => {
                   placeholder="Tìm kiếm..."
                   value={searchTerm}
                   onChange={handleSearch}
-                  onKeyDown={handleKeyDown}
                   style={{
                     padding: "15px",
                     width: "100%",

@@ -21,7 +21,7 @@ const YourOrder = () => {
         const id = localStorage.getItem("user_id");
 
         const response = await fetch(
-          `http://192.168.10.164:8080/api/v1/orders/user/${id}`,
+          `http://192.168.1.45:8080/api/v1/orders/user/${id}`,
           {
             method: "GET",
             headers: {
@@ -95,8 +95,8 @@ const YourOrder = () => {
                 </div>
                 <div className="YOtitle">
                   <p>
-                    {item?.orderDate &&
-                      new Date(item.orderDate).toLocaleDateString("vi-VN", {
+                    {item?.order_date &&
+                      new Date(item.order_date).toLocaleDateString("vi-VN", {
                         day: "2-digit",
                         month: "2-digit",
                         year: "numeric",
@@ -104,7 +104,7 @@ const YourOrder = () => {
                   </p>
                 </div>
                 <div className="YOtitle">
-                  <p>{item.totalMoney?.toLocaleString()}đ</p>
+                  <p>{item.total_money?.toLocaleString()}đ</p>
                 </div>
                 <div className="YOtitle">
                   <p>{item.status}</p>

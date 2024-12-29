@@ -5,7 +5,7 @@ import "./DetailsOrder.css";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const DetailsOrder = () => {
-  const [order1, setOrder1] = useState([]);
+  const [order1, setOrder1] = useState(null);
   const [order2, setOrder2] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -13,13 +13,47 @@ const DetailsOrder = () => {
   const { id } = location.state || {};
 
   useEffect(() => {
+    const fetchOrder = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const userId = localStorage.getItem("user_id");
+
+        const response = await fetch(
+          `http://192.168.1.45:8080/api/v1/orders/user/${userId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch orders");
+        }
+
+        const data = await response.json();
+        const selectedOrder = data.find((order) => order.id === id);
+        setOrder1(selectedOrder);
+      } catch (error) {
+        console.error(error);
+        setError("Có lỗi khi tải dữ liệu");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrder();
+  }, [id]);
+
+  useEffect(() => {
     const fetchOrderDetails = async () => {
       try {
         const token = localStorage.getItem("token");
-        const id = localStorage.getItem("user_id");
 
         const response = await fetch(
-          `http://192.168.10.164:8080/api/v1/orders/user/${id}`,
+          `http://192.168.1.45:8080/api/v1/order_details/order/${id}`,
           {
             method: "GET",
             headers: {
@@ -34,41 +68,6 @@ const DetailsOrder = () => {
         }
 
         const data = await response.json();
-        console.log("Đơn hàng:", data);
-        setOrder1(data);
-      } catch (error) {
-        console.error(error);
-        setError("Có lỗi khi tải dữ liệu");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchOrderDetails();
-  }, []);
-
-  useEffect(() => {
-    const fetchOrderDetails = async () => {
-      try {
-        const token = localStorage.getItem("token");
-
-        const response = await fetch(
-          `http://192.168.10.164:8080/api/v1/order_details/order/${id}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`, // Gửi token trong header
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch order details");
-        }
-
-        const data = await response.json();
-        console.log("Chi tiết đơn hàng:", data);
         setOrder2(data);
       } catch (error) {
         console.error(error);
@@ -80,6 +79,9 @@ const DetailsOrder = () => {
 
     fetchOrderDetails();
   }, [id]);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <div id="main">
@@ -111,16 +113,16 @@ const DetailsOrder = () => {
             </div>
 
             <div>
-              {order2?.map((order2) => (
-                <div className="productOD" key={order2?.product_id}>
+              {order2.map((order) => (
+                <div className="productOD" key={order.product_id}>
                   <div className="nameProductOD">
-                    <p>{order2?.product_name}</p>
-                    <p>X{order2?.quantity}</p>
+                    <p>{order.product_name}</p>
+                    <p>X{order.quantity}</p>
                   </div>
                   <div className="priceProductOD">
                     <p>
-                      {order2?.total_money !== undefined
-                        ? `${order2.total_money.toLocaleString()}đ`
+                      {order.total_money
+                        ? `${order.total_money.toLocaleString()}đ`
                         : "Đang tải..."}
                     </p>
                   </div>
@@ -129,20 +131,13 @@ const DetailsOrder = () => {
             </div>
 
             <div className="totalPriceOD">
-              {/* <div className="nameTotalPriceOD">
-                <p>Tạm tính </p>
-              </div>
-              <div className="priceTotalPriceOD">
-                <p>599.000đ</p>
-              </div> */}
-            </div>
-
-            <div className="totalPriceOD">
               <div className="nameTotalPriceOD">
                 <p>Phí vận chuyển </p>
               </div>
               <div className="priceTotalPriceOD">
-                <p>25.000đ</p>
+                <p>
+                  {order1?.payment_shipping === "fast" ? "35.000đ" : "25.000đ"}
+                </p>
               </div>
             </div>
 
@@ -152,8 +147,8 @@ const DetailsOrder = () => {
               </div>
               <div className="priceTotalPriceOD">
                 <p>
-                  {order1?.[0]?.totalMoney !== undefined
-                    ? `${order1?.[0]?.totalMoney.toLocaleString()}đ`
+                  {order1?.total_money
+                    ? `${order1.total_money.toLocaleString()}đ`
                     : "Đang tải..."}
                 </p>
               </div>
@@ -168,7 +163,7 @@ const DetailsOrder = () => {
                 <p>Họ và tên: </p>
               </div>
               <div className="addressOD2">
-                <p>{order1?.[0]?.fullName || "Đang tải..."}</p>
+                <p>{order1?.fullname || "Đang tải..."}</p>
               </div>
             </div>
 
@@ -177,7 +172,7 @@ const DetailsOrder = () => {
                 <p>Địa chỉ: </p>
               </div>
               <div className="addressOD2">
-                <p>{order1?.[0]?.address}</p>
+                <p>{order1?.address}</p>
               </div>
             </div>
 
@@ -186,7 +181,7 @@ const DetailsOrder = () => {
                 <p>Email: </p>
               </div>
               <div className="addressOD2">
-                <p>{order1?.[0]?.email}</p>
+                <p>{order1?.email}</p>
               </div>
             </div>
 
@@ -195,7 +190,7 @@ const DetailsOrder = () => {
                 <p>Số điện thoại: </p>
               </div>
               <div className="addressOD2">
-                <p>{order1?.[0]?.phoneNumber}</p>
+                <p>{order1?.phone_number}</p>
               </div>
             </div>
           </div>

@@ -19,6 +19,7 @@ const Pay = () => {
   const [selectedDistrict, setSelectedDistrict] = useState(null);
   const [selectedWard, setSelectedWard] = useState(null);
   const [products1, setProducts1] = useState(null);
+  const [paymentMethod, setPaymentMethod] = useState("COD");
   const location = useLocation();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -34,13 +35,12 @@ const Pay = () => {
 
   useEffect(() => {
     if (productId) {
-      fetch(`http://192.168.10.164:8080/api/v1/products/${productId}`)
+      fetch(`http://192.168.1.45:8080/api/v1/products/${productId}`)
         .then((res) => {
           if (!res.ok) throw new Error("Failed to fetch product data");
           return res.json();
         })
         .then((data) => {
-          console.log("Received data:", data);
           if (data) {
             setProducts1(data);
           } else {
@@ -48,7 +48,6 @@ const Pay = () => {
           }
         })
         .catch((error) => {
-          console.error("Error fetching products:", error);
           setError("Lỗi khi tải dữ liệu");
         })
         .finally(() => {
@@ -78,30 +77,29 @@ const Pay = () => {
   const calculateTotalItems = () => {
     return cartItems.length
       ? cartItems.reduce((total, item) => total + item.quantity, 0)
-      : 1; // Nếu không có cartItems, giả định là 1 sản phẩm
+      : 1;
   };
 
   const handleShippingChange = (event) => {
     const selectedMethod = event.target.value;
-    setShippingMethod(selectedMethod); // Cập nhật giá trị 'saving' hoặc 'fast'
+    setShippingMethod(selectedMethod);
 
     if (selectedMethod === "saving") {
-      setShippingCost(25000); // Phí vận chuyển tiết kiệm
+      setShippingCost(25000);
     } else if (selectedMethod === "fast") {
-      setShippingCost(35000); // Phí vận chuyển nhanh
+      setShippingCost(35000);
     }
   };
 
-  // Tính tổng giá trị sản phẩm trong giỏ hàng (totalPrice)
+  const handlePaymentMethodChange = (event) => {
+    setPaymentMethod(event.target.value);
+  };
+
   const totalPrice = cartItems.length
     ? cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)
     : products1
     ? products1.price * count
     : 0;
-
-  // Trả về giao diện trong trường hợp đang tải hoặc có lỗi
-  if (loading) return <p>Đang tải dữ liệu...</p>;
-  if (error) return <p>{error}</p>;
 
   const handleCityChange = (selectedOption) => {
     setSelectedCity(selectedOption);
@@ -131,6 +129,80 @@ const Pay = () => {
   const handleWardChange = (selectedOption) => {
     setSelectedWard(selectedOption);
   };
+
+  const handleOrderSubmit = async () => {
+    const fullName = document.querySelector(".InputNamePay input").value;
+    const email = document.querySelector(".InputEmailPhonePay1 input").value;
+    const phoneNumber = document.querySelector(
+      ".InputEmailPhonePay2 input"
+    ).value;
+    const addressDetail = document.querySelector(
+      ".InputAddressPay input"
+    ).value;
+
+    if (
+      !fullName ||
+      !email ||
+      !phoneNumber ||
+      !addressDetail ||
+      !selectedCity ||
+      !selectedDistrict ||
+      !selectedWard
+    ) {
+      alert("Vui lòng điền đầy đủ thông tin địa chỉ và thông tin liên hệ.");
+      return;
+    }
+
+    const address = `${addressDetail}, ${selectedWard?.label || ""}, ${
+      selectedDistrict?.label || ""
+    }, ${selectedCity?.label || ""}`.trim();
+
+    const userId = parseInt(localStorage.getItem("user_id"), 10);
+    if (!userId) {
+      alert("Không tìm thấy thông tin người dùng. Vui lòng đăng nhập lại.");
+      return;
+    }
+
+    const payload = {
+      fullname: fullName,
+      email: email,
+      phone_number: phoneNumber,
+      address: address,
+      note: "Đơn hàng mới",
+      total_money: totalPrice + shippingCost,
+      user_id: userId, // Đảm bảo dạng số
+      payment_method: paymentMethod,
+      payment_shipping: shippingMethod === "saving" ? "saving" : "fast",
+      cart_items: cartItems.map((item) => ({
+        product_id: item.id,
+        quantity: item.quantity,
+      })),
+    };
+
+    try {
+      const response = await axios.post(
+        "http://192.168.1.45:8080/api/v1/orders",
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`, // Nếu cần token
+          },
+        }
+      );
+      if (response.status === 200) {
+        alert("Đặt hàng thành công!");
+      } else {
+        alert("Đặt hàng thất bại. Vui lòng thử lại.");
+      }
+    } catch (error) {
+      console.error("Error while placing order:", error);
+      alert("Đã xảy ra lỗi khi đặt hàng. Vui lòng thử lại.");
+    }
+  };
+
+  if (loading) return <p>Đang tải dữ liệu...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <div id="main">
@@ -171,7 +243,6 @@ const Pay = () => {
               </div>
 
               <div className="InputCityPay">
-                {/* Dropdown for City */}
                 <div className="InputCityPay1">
                   <Select
                     value={selectedCity}
@@ -184,7 +255,6 @@ const Pay = () => {
                   />
                 </div>
 
-                {/* Dropdown for District */}
                 <div className="InputCityPay2">
                   <Select
                     value={selectedDistrict}
@@ -198,7 +268,6 @@ const Pay = () => {
                   />
                 </div>
 
-                {/* Dropdown for Ward */}
                 <div className="InputCityPay3">
                   <Select
                     value={selectedWard}
@@ -261,12 +330,13 @@ const Pay = () => {
                 <input
                   style={{ cursor: "pointer" }}
                   type="radio"
-                  id="saving-payment"
+                  id="cod-payment"
                   name="payment"
-                  value="saving"
+                  value="COD"
                   defaultChecked
+                  onChange={handlePaymentMethodChange}
                 />
-                <label htmlFor="saving-payment" className="flex-label">
+                <label htmlFor="cod-payment" className="flex-label">
                   <div className="pay-text">Thanh toán khi giao hàng (COD)</div>
                   <div className="ImgPayment">
                     <img src={IconMoney} alt="" />
@@ -278,11 +348,12 @@ const Pay = () => {
                 <input
                   style={{ cursor: "pointer" }}
                   type="radio"
-                  id="saving-payment"
+                  id="bank-transfer-payment"
                   name="payment"
-                  value="fast"
+                  value="Bank Transfer"
+                  onChange={handlePaymentMethodChange}
                 />
-                <label htmlFor="saving-payment" className="flex-label">
+                <label htmlFor="bank-transfer-payment" className="flex-label">
                   <div className="pay-text"> Chuyển khoản qua ngân hàng</div>
                   <div className="ImgPayment">
                     <img src={IconTransfer} alt="" />
@@ -294,11 +365,12 @@ const Pay = () => {
                 <input
                   style={{ cursor: "pointer" }}
                   type="radio"
-                  id="saving-payment"
+                  id="zalopay-payment"
                   name="payment"
-                  value="fast"
+                  value="ZaloPay"
+                  onChange={handlePaymentMethodChange}
                 />
-                <label htmlFor="saving-payment" className="flex-label">
+                <label htmlFor="zalopay-payment" className="flex-label">
                   <div className="pay-text"> Thanh toán qua ZaloPay</div>
                   <div className="ImgPayment">
                     <img src={IconZalopay} alt="" />
@@ -310,11 +382,12 @@ const Pay = () => {
                 <input
                   style={{ cursor: "pointer" }}
                   type="radio"
-                  id="saving-payment"
+                  id="momo-payment"
                   name="payment"
-                  value="fast"
+                  value="MoMo"
+                  onChange={handlePaymentMethodChange}
                 />
-                <label htmlFor="saving-payment" className="flex-label">
+                <label htmlFor="momo-payment" className="flex-label">
                   <div className="pay-text">Thanh toán qua Ví điện tử MoMo</div>
                   <div className="ImgPayment">
                     <img src={IconMomo} alt="" />
@@ -326,11 +399,12 @@ const Pay = () => {
                 <input
                   style={{ cursor: "pointer" }}
                   type="radio"
-                  id="saving-payment"
+                  id="vnpay-payment"
                   name="payment"
-                  value="fast"
+                  value="VNPAY-QR"
+                  onChange={handlePaymentMethodChange}
                 />
-                <label htmlFor="saving-payment" className="flex-label">
+                <label htmlFor="vnpay-payment" className="flex-label">
                   <div className="pay-text"> Thanh toán qua VNPAY-QR</div>
                   <div className="ImgPayment">
                     <img src={IconVnpay} alt="" />
@@ -375,7 +449,7 @@ const Pay = () => {
                   <div className="ProductPay">
                     <div className="ProductPayImg">
                       <img
-                        src={`data:image/jpeg;base64,${product.url}`} // Sử dụng ảnh đúng của sản phẩm
+                        src={`data:image/jpeg;base64,${product.url}`}
                         alt={product.name}
                       />
                     </div>
@@ -415,7 +489,7 @@ const Pay = () => {
                 <div className="EstimatePriceContent1">Phí vận chuyển</div>
                 <div className="EstimatePriceContent2">
                   {shippingCost > 0
-                    ? Math.floor(shippingCost).toLocaleString("vi-VN") + "đ"
+                    ? `${Math.floor(shippingCost).toLocaleString("vi-VN")} đ`
                     : "Chưa chọn phương thức"}
                 </div>
               </div>
@@ -440,7 +514,7 @@ const Pay = () => {
                   <a href="/cart">Quay về giỏ hàng</a>
                 </div>
                 <div className="OrderButton">
-                  <button>ĐẶT HÀNG</button>
+                  <button onClick={handleOrderSubmit}>ĐẶT HÀNG</button>
                 </div>
               </div>
             </div>

@@ -13,7 +13,8 @@ html {
   gap: 20px;
 }
 
-.FormAddProduct input {
+.FormAddProduct input,
+.FormAddProduct select {
   border: 1px solid #333;
   border-radius: 3px;
   width: 370px;
@@ -54,4 +55,8 @@ html {
 .ButtonAddProduct button {
   padding: 12px;
   cursor: pointer;
+}
+
+.TitleImgProduct p {
+  padding-bottom: 10px;
 }

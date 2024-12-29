@@ -1,0 +1,86 @@
+.PickDetailsImgProduct {
+  border: 1px solid #333;
+  border-radius: 3px;
+  width: 760px;
+}
+
+.PickDetailsImgProduct button {
+  margin: 12px;
+  cursor: pointer;
+}
+
+.ButtonEditProduct {
+  padding-top: 15px;
+}
+
+.ButtonEditProduct button {
+  padding: 12px;
+  cursor: pointer;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-50%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.Popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.Popup {
+  background: white;
+  width: 530px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: slideDown 0.5s ease-out;
+}
+
+.PopupContent {
+  padding: 20px;
+}
+
+.TitleImgDetailsProduct p {
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+
+.TitlePopupContent p {
+  text-align: center;
+  padding: 15px 15px 0;
+  font-size: 18px;
+}
+
+.PopupContent input {
+  border: 1px solid #333;
+  border-radius: 3px;
+  width: 100%;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.ButtonPopup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 15px;
+}
+
+.ButtonPopup button {
+  padding: 10px;
+  cursor: pointer;
+}

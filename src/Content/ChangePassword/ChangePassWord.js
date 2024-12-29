@@ -33,7 +33,7 @@ const ChangePassWord = () => {
     setIsLoading(true);
     axios
       .put(
-        `http://192.168.10.164:8080/api/v1/users/details/${userId}`,
+        `http://192.168.1.45:8080/api/v1/users/details/${userId}`,
         {
           password: newPassword,
         },

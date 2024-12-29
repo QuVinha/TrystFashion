@@ -48,6 +48,10 @@ const Details = () => {
     setErrorMessage("");
   };
 
+  const handleThumbnailClick = (imageData) => {
+    setSelectedImage(imageData);
+  };
+
   const handleAddToCart = () => {
     let isValid = true;
 
@@ -109,7 +113,7 @@ const Details = () => {
 
   useEffect(() => {
     if (id) {
-      fetch(`http://192.168.10.164:8080/api/v1/products/${id}`)
+      fetch(`http://192.168.1.45:8080/api/v1/products/${id}`)
         .then((res) => res.json())
         .then((data) => {
           console.log("Received data:", data);
@@ -131,7 +135,7 @@ const Details = () => {
 
   useEffect(() => {
     if (id) {
-      fetch(`http://192.168.10.164:8080/api/v1/products/images/${id}`)
+      fetch(`http://192.168.1.45:8080/api/v1/products/images/${id}`)
         .then((res) => res.json())
         .then((data) => {
           console.log("Received data:", data);
@@ -150,10 +154,6 @@ const Details = () => {
         });
     }
   }, [id]);
-
-  const handleThumbnailClick = (imageData) => {
-    setSelectedImage(imageData);
-  };
 
   return (
     <div id="main">

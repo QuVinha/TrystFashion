@@ -47,6 +47,23 @@ const HomePage = () => {
     setErrorMessage("");
   };
 
+  const handleNavigate = (id) => {
+    navigate("/details", { state: { id } });
+    window.scrollTo(0, 0);
+  };
+
+  const Up = () => {
+    if (count < 100) {
+      setCount(count + 1);
+    }
+  };
+
+  const Down = () => {
+    if (count > 1) {
+      setCount(count - 1);
+    }
+  };
+
   const handleAddToCart = () => {
     let isValid = true;
 
@@ -106,21 +123,9 @@ const HomePage = () => {
     }
   };
 
-  const Up = () => {
-    if (count < 100) {
-      setCount(count + 1);
-    }
-  };
-
-  const Down = () => {
-    if (count > 1) {
-      setCount(count - 1);
-    }
-  };
-
+  //Video
   useEffect(() => {
     const videoElement = document.getElementById("productVideoWC5");
-
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -140,7 +145,6 @@ const HomePage = () => {
     if (videoElement) {
       observer.observe(videoElement);
     }
-
     // Hủy bỏ observer khi component bị gỡ bỏ
     return () => {
       if (videoElement) {
@@ -149,6 +153,11 @@ const HomePage = () => {
     };
   }, []);
 
+  //FormContact
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -156,10 +165,6 @@ const HomePage = () => {
     phone: "",
     message: "",
   });
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
   const validateForm = () => {
     if (
@@ -209,6 +214,8 @@ const HomePage = () => {
       );
   };
 
+  //Slides
+  const images = [Thy, Thy1, Thy2];
   const settings = {
     infinite: true, // Vòng lặp vô hạn
     speed: 500, // Tốc độ chuyển đổi
@@ -220,10 +227,9 @@ const HomePage = () => {
     lazyLoad: "progressive",
   };
 
-  const images = [Thy, Thy1, Thy2];
-
+  //API Sản phẩm
   useEffect(() => {
-    fetch("http://192.168.10.164:8080/api/v1/products/6")
+    fetch("http://192.168.1.45:8080/api/v1/products/6")
       .then((res) => res.json())
       .then((data) => {
         console.log("Received data:", data);
@@ -243,7 +249,7 @@ const HomePage = () => {
   }, []);
 
   useEffect(() => {
-    fetch("http://192.168.10.164:8080/api/v1/products/17")
+    fetch("http://192.168.1.45:8080/api/v1/products/17")
       .then((res) => res.json())
       .then((data) => {
         console.log("Received data:", data);
@@ -263,7 +269,7 @@ const HomePage = () => {
   }, []);
 
   useEffect(() => {
-    fetch("http://192.168.10.164:8080/api/v1/products")
+    fetch("http://192.168.1.45:8080/api/v1/products")
       .then((res) => res.json())
       .then((data) => {
         console.log("Dữ liệu nhận được:", data);
@@ -291,11 +297,6 @@ const HomePage = () => {
         setLoading(false);
       });
   }, []);
-
-  const handleNavigate = (id) => {
-    navigate("/details", { state: { id } });
-    window.scrollTo(0, 0);
-  };
 
   return (
     <div id="main">

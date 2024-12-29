@@ -21,7 +21,7 @@ const EditCategory = () => {
 
   useEffect(() => {
     // Fetch dữ liệu danh mục hiện tại
-    fetch(`http://192.168.10.164:8080/api/v1/categories/${id}`)
+    fetch(`http://192.168.1.45:8080/api/v1/categories/${id}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch category data");
@@ -51,7 +51,7 @@ const EditCategory = () => {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        `http://192.168.10.164:8080/api/v1/categories/${id}`,
+        `http://192.168.1.45:8080/api/v1/categories/${id}`,
         {
           method: "PUT",
           headers: {

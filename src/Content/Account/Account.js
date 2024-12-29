@@ -24,7 +24,7 @@ const Account = () => {
     if (token) {
       axios
         .post(
-          "http://192.168.10.164:8080/api/v1/users/details",
+          "http://192.168.1.45:8080/api/v1/users/details",
           {},
           {
             headers: {
@@ -60,7 +60,7 @@ const Account = () => {
     // Gửi thông tin đã sửa tới backend
     axios
       .put(
-        `http://192.168.10.164:8080/api/v1/users/details/${userId}`,
+        `http://192.168.1.45:8080/api/v1/users/details/${userId}`,
         {
           fullname: profile.fullName,
           address: profile.address,

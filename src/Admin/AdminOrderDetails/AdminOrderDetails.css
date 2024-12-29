@@ -34,11 +34,11 @@ html {
 }
 
 .titleOD1 {
-  width: 85%;
+  width: 80%;
 }
 
 .titleOD2 {
-  width: 15%;
+  width: 20%;
 }
 
 .titleOD p,
@@ -62,12 +62,12 @@ html {
 
 .nameProductOD,
 .nameTotalPriceOD {
-  width: 85%;
+  width: 80%;
 }
 
 .priceProductOD,
 .priceTotalPriceOD {
-  width: 15%;
+  width: 20%;
 }
 
 .nameProductOD {
@@ -110,4 +110,9 @@ html {
 
 .OD1 {
   width: 50%;
+}
+
+.ButtonAcceptOrder button {
+  padding: 12px;
+  margin: 5px 0 10px 15px;
 }

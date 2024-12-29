@@ -13,84 +13,6 @@ const AdminProduct = () => {
   const [error, setError] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
 
-  useEffect(() => {
-    fetch("http://192.168.10.164:8080/api/v1/products")
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Dữ liệu nhận được:", data);
-        if (Array.isArray(data)) {
-          setProducts(data);
-        } else if (data.products) {
-          setProducts(data.products);
-        } else {
-          setError("Không có dữ liệu sản phẩm");
-        }
-      })
-      .catch((error) => {
-        console.log("Lỗi khi tải sản phẩm:", error);
-        setError("Lỗi khi tải dữ liệu");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
-
-  useEffect(() => {
-    const roleName = localStorage.getItem("roleName"); // Lấy roleName từ localStorage
-    const token = localStorage.getItem("token"); // Lấy token từ localStorage
-    if (roleName === "ADMIN" && token) {
-      setIsAdmin(true); // Nếu người dùng là admin và có token hợp lệ
-    }
-  }, []);
-
-  const openDeletePopup = (productId) => {
-    setDeleteProductId(productId); // Lưu ID sản phẩm cần xóa
-    setIsDeleteOpen(true);
-  };
-
-  const closeDeletePopup = () => {
-    setDeleteProductId(null); // Xóa ID sản phẩm cần xóa
-    setIsDeleteOpen(false);
-  };
-
-  const handleDeleteProduct = async () => {
-    // Kiểm tra xem người dùng có quyền admin không
-    if (!isAdmin) {
-      alert("Bạn không có quyền xóa sản phẩm.");
-      return;
-    }
-
-    try {
-      const token = localStorage.getItem("token"); // Lấy token từ localStorage
-
-      const response = await fetch(
-        `http://192.168.10.164:8080/api/v1/products/${deleteProductId}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Gửi token trong header
-          },
-        }
-      );
-
-      if (response.ok) {
-        // Nếu xoá thành công
-        alert("Xoá sản phẩm thành công");
-        setProducts(
-          products.filter((product) => product.id !== deleteProductId)
-        ); // Cập nhật lại danh sách sản phẩm
-        closeDeletePopup(); // Đóng popup xác nhận xóa
-      } else {
-        // Nếu không thành công
-        alert("Xoá sản phẩm không thành công");
-      }
-    } catch (error) {
-      // Nếu có lỗi khi gửi yêu cầu
-      alert("Lỗi khi xóa sản phẩm");
-    }
-  };
-
   const handleHome = () => {
     navigate("/");
   };
@@ -131,6 +53,84 @@ const AdminProduct = () => {
     localStorage.removeItem("cartItems");
     navigate("/login");
     window.scrollTo(0, 0);
+  };
+
+  useEffect(() => {
+    const roleName = localStorage.getItem("roleName"); // Lấy roleName từ localStorage
+    const token = localStorage.getItem("token"); // Lấy token từ localStorage
+    if (roleName === "ADMIN" && token) {
+      setIsAdmin(true); // Nếu người dùng là admin và có token hợp lệ
+    }
+  }, []);
+
+  const openDeletePopup = (productId) => {
+    setDeleteProductId(productId); // Lưu ID sản phẩm cần xóa
+    setIsDeleteOpen(true);
+  };
+
+  const closeDeletePopup = () => {
+    setDeleteProductId(null); // Xóa ID sản phẩm cần xóa
+    setIsDeleteOpen(false);
+  };
+
+  useEffect(() => {
+    fetch("http://192.168.1.45:8080/api/v1/products")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Dữ liệu nhận được:", data);
+        if (Array.isArray(data)) {
+          setProducts(data);
+        } else if (data.products) {
+          setProducts(data.products);
+        } else {
+          setError("Không có dữ liệu sản phẩm");
+        }
+      })
+      .catch((error) => {
+        console.log("Lỗi khi tải sản phẩm:", error);
+        setError("Lỗi khi tải dữ liệu");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  const handleDeleteProduct = async () => {
+    // Kiểm tra xem người dùng có quyền admin không
+    if (!isAdmin) {
+      alert("Bạn không có quyền xóa sản phẩm.");
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("token"); // Lấy token từ localStorage
+
+      const response = await fetch(
+        `http://192.168.1.45:8080/api/v1/products/${deleteProductId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Gửi token trong header
+          },
+        }
+      );
+
+      if (response.ok) {
+        // Nếu xoá thành công
+        alert("Xoá sản phẩm thành công");
+        setProducts(
+          products.filter((product) => product.id !== deleteProductId)
+        ); // Cập nhật lại danh sách sản phẩm
+        closeDeletePopup(); // Đóng popup xác nhận xóa
+      } else {
+        // Nếu không thành công
+        alert("Xoá sản phẩm không thành công");
+      }
+    } catch (error) {
+      // Nếu có lỗi khi gửi yêu cầu
+      alert("Lỗi khi xóa sản phẩm");
+    }
   };
 
   return (

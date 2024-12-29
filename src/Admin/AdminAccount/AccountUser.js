@@ -5,14 +5,27 @@ import { useNavigate } from "react-router-dom";
 const AccountUser = () => {
   const navigate = useNavigate();
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const Delete = () => setIsDeleteOpen(true);
   const closeDelete = () => setIsDeleteOpen(false);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState(null);
+  const Delete = (id) => {
+    setSelectedUserId(id); // Lưu ID người dùng được chọn
+    setIsDeleteOpen(true); // Hiển thị overlay
+  };
 
   useEffect(() => {
-    fetch("http://192.168.10.164:8080/api/v1/users")
+    const roleName = localStorage.getItem("roleName");
+    const token = localStorage.getItem("token");
+    if (roleName === "ADMIN" && token) {
+      setIsAdmin(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetch("http://192.168.1.45:8080/api/v1/users")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Không thể lấy dữ liệu");
@@ -31,6 +44,53 @@ const AccountUser = () => {
         setLoading(false);
       });
   }, []);
+
+  const handleDeleteAccount = () => {
+    if (!isAdmin) {
+      alert("Bạn không có quyền để thực hiện thao tác này");
+      return; // Không thực hiện thao tác nếu không phải admin
+    }
+
+    const token = localStorage.getItem("token");
+    fetch(
+      `http://192.168.1.45:8080/api/v1/users/deactivate/${selectedUserId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Đảm bảo gửi token trong header
+        },
+      }
+    )
+      .then((response) => {
+        if (!response.ok) {
+          return response.text(); // Trả về dữ liệu dạng text nếu có lỗi
+        }
+        return response.json(); // Nếu thành công, parse dữ liệu dạng JSON
+      })
+      .then((data) => {
+        if (typeof data === "string") {
+          // Nếu dữ liệu trả về là một chuỗi thông báo (ví dụ: thông báo lỗi)
+          console.log("Thông báo lỗi từ API:", data);
+          alert(data); // Hiển thị thông báo lỗi
+        } else {
+          // Nếu dữ liệu trả về là JSON
+          if (data.is_active === false) {
+            console.log("Có lỗi xảy ra khi vô hiệu hóa tài khoản", data);
+            console.log("Dữ liệu trả về:", data);
+            alert("Đã xảy ra lỗi khi vô hiệu hóa tài khoản");
+          } else {
+            console.log("Tài khoản đã bị vô hiệu hóa:", data);
+            alert("Tài khoản đã bị vô hiệu hóa");
+            window.location.reload();
+          }
+        }
+      })
+      .catch((error) => {
+        console.error("Lỗi khi vô hiệu hóa tài khoản:", error);
+        alert("Có lỗi xảy ra khi vô hiệu hóa tài khoản");
+      });
+  };
 
   // Nếu đang tải dữ liệu
   if (loading) {
@@ -211,45 +271,11 @@ const AccountUser = () => {
                 <p>Bạn có chắc chắn muốn vô hiệu hoá tài khoản này?</p>
                 <div className="ButtonDeleteUser">
                   <button onClick={closeDelete}>Không</button>
-                  <button>Chắc chắn</button>
+                  <button onClick={handleDeleteAccount}>Chắc chắn</button>
                 </div>
               </div>
             </div>
           )}
-
-          {/* <div className="ListAccountUser">
-            <div className="IdUser">
-              <p>10</p>
-            </div>
-
-            <div className="NameUser">
-              <p>Nguyễn Khắc Quang Vinh</p>
-            </div>
-
-            <div className="AccUser">
-              <p>QuangVinh18</p>
-            </div>
-
-            <div className="AddressUser">
-              <p>K104 Mai Lão Bạng</p>
-            </div>
-
-            <div className="BirthUser">
-              <p>16/8/2002</p>
-            </div>
-
-            <div className="PhoneUser">
-              <p>0762779408</p>
-            </div>
-
-            <div className="WatchUser">
-              <i class="fa-solid fa-magnifying-glass"></i>
-            </div>
-
-            <div className="DisableUser">
-              <i class="fa-solid fa-ban"></i>
-            </div>
-          </div> */}
         </div>
       </div>
     </div>

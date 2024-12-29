@@ -8,6 +8,30 @@ const AddCategory = () => {
   const [categoryName, setCategoryName] = useState(""); // State để lưu tên danh mục
   const [loading, setLoading] = useState(false);
 
+  const handleHome = () => {
+    navigate("/");
+  };
+
+  const handleAdmin = () => {
+    navigate("/admin");
+  };
+
+  const handleAccountUser = () => {
+    navigate("/accountUser");
+  };
+
+  const handleAdminOrder = () => {
+    navigate("/adminOrder");
+  };
+
+  const handleAdminProduct = () => {
+    navigate("/adminProduct");
+  };
+
+  const handleAdminCategory = () => {
+    navigate("/adminCategory");
+  };
+
   useEffect(() => {
     const roleName = localStorage.getItem("roleName"); // Lấy roleName từ localStorage
     const token = localStorage.getItem("token"); // Lấy token từ localStorage
@@ -31,7 +55,7 @@ const AddCategory = () => {
       setLoading(true); // Bật trạng thái loading
       const token = localStorage.getItem("token"); // Lấy token từ localStorage
       const response = await fetch(
-        "http://192.168.10.164:8080/api/v1/categories",
+        "http://192.168.1.45:8080/api/v1/categories",
         {
           method: "POST",
           headers: {
@@ -55,30 +79,6 @@ const AddCategory = () => {
     } finally {
       setLoading(false); // Tắt trạng thái loading
     }
-  };
-
-  const handleHome = () => {
-    navigate("/");
-  };
-
-  const handleAdmin = () => {
-    navigate("/admin");
-  };
-
-  const handleAccountUser = () => {
-    navigate("/accountUser");
-  };
-
-  const handleAdminOrder = () => {
-    navigate("/adminOrder");
-  };
-
-  const handleAdminProduct = () => {
-    navigate("/adminProduct");
-  };
-
-  const handleAdminCategory = () => {
-    navigate("/adminCategory");
   };
 
   return (
